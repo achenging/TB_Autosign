@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +19,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Map;
 
@@ -44,13 +42,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private String sign;
     private String vcode;
     private String vcodeMD5;
-    private long timeStamp = new Date().getTime();
-
+    private Date   date;
+    private long timeStamp;
+    private String vcodeUrl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initConfig();
         init();
+    }
+
+    private void initConfig() {
+        String name = lastLogin();
+        if (name != null) {
+            goTiebaAutoSign(name);
+        }
     }
 
     private void init() {
@@ -61,6 +68,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mLoginButton = (Button) findViewById(R.id.login_but);
         mLoginButton.setOnClickListener(this);
         mVcodeEditText.addTextChangedListener(new TextWatcherListener());
+        date = new Date();
+        timeStamp = date.getTime();
     }
 
     @Override
@@ -73,16 +82,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                 if (errorCode.equals("0")) {
                     sign = PostUrlUtil.getSign(username, password, timeStamp);
-                }else if (errorCode.equals("5") || errorCode.equals("6")) {
-
-                    Log.i("VCODE>>>>>>",vcode);
+                } else if (errorCode.equals("5") || errorCode.equals("6")) {
                     sign = PostUrlUtil.getVcodeSign(username, password, timeStamp, vcode, vcodeMD5);
-                    Log.i("SIGN2>>>>>>>>>",sign);
                 }
                 TiebaRequest stringRequest = null;
                 stringRequest = new TiebaRequest(
                         Request.Method.POST,
-                        TieBaApi.URL + TieBaApi.LOGIN,
+                        TieBaApi.HOST_URL + TieBaApi.LOGIN,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
@@ -92,20 +98,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-
-                                Log.i("errorCode>>>>>>>>>",errorCode);
                                 Gson gson = new Gson();
                                 UserMsg userMsg = gson.fromJson(response, UserMsg.class);
                                 if (errorCode.equals("0")) {
                                     saveUser(userMsg);
-                                } else if (errorCode.equals("5") || errorCode.equals("6")) {
+                                } else if (errorCode.equals("5")) {
                                     mVcodeImage.setVisibility(View.VISIBLE);
                                     mVcodeEditText.setVisibility(View.VISIBLE);
-                                    String vcodeUrl = userMsg.getAnti().getVcodePicUrl();
-                                    vcodeMD5 = userMsg.getAnti().getVcodeMd5();
-                                    mVcodeImage.setImageUrl(vcodeUrl, VolleySingleton.getInstance(MainActivity.this).getImageLoader());
+                                    setImageVcodeData(userMsg);
                                     vcode = mVcodeEditText.getText().toString();
-
+                                } else if (errorCode.equals("6")) {
+                                    Toast.makeText(MainActivity.this, "验证码输入有误，请重新输入", Toast.LENGTH_SHORT).show();
+                                    setImageVcodeData(userMsg);
+                                    timeStamp = date.getTime();
                                 } else {
                                     Toast.makeText(MainActivity.this, "Unknown Error!!", Toast.LENGTH_SHORT).show();
                                 }
@@ -114,7 +119,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-
+                                Toast.makeText(MainActivity.this, "请检查网络连接...", Toast.LENGTH_SHORT).show();
                             }
                         }) {
                     @Override
@@ -132,6 +137,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    private void setImageVcodeData(UserMsg userMsg) {
+        vcodeUrl = userMsg.getAnti().getVcodePicUrl();
+        vcodeMD5 = userMsg.getAnti().getVcodeMd5();
+        mVcodeImage.setImageUrl(vcodeUrl, VolleySingleton.getInstance(MainActivity.this).getImageLoader());
+    }
+
     private void saveUser(UserMsg userMsg) {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.config) + userMsg.getUser().getName(), MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -140,9 +151,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 .putString(TieBaApi.DBUSS, userMsg.getUser().getBDUSS())
                 .putString(TieBaApi.PORTRAIT, userMsg.getUser().getPortrait())
                 .putString(TieBaApi.TBS, userMsg.getAnti().getTbs());
+
         editor.commit();
+        saveLastLoginUser(userMsg.getUser().getName());
+        goTiebaAutoSign(userMsg.getUser().getName());
+    }
+
+    private void saveLastLoginUser(String name) {
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.last_login_user), MODE_PRIVATE);
+        sharedPreferences.edit().putString(TieBaApi.NAME, name).commit();
+    }
+
+    private String lastLogin() {
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.last_login_user), MODE_PRIVATE);
+        String name = sharedPreferences.getString(TieBaApi.NAME, null);
+        return name;
+    }
+
+    private void goTiebaAutoSign(String name) {
         Intent autoSignIntent = new Intent(MainActivity.this, AutoSignActivity.class);
-        autoSignIntent.putExtra(TieBaApi.NAME, userMsg.getUser().getName());
+        autoSignIntent.putExtra(TieBaApi.NAME,name);
         startActivity(autoSignIntent);
     }
 
@@ -163,4 +191,5 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             vcode = s.toString();
         }
     }
+
 }

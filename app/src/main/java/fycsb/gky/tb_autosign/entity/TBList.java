@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by codefu on 2014/12/27.
@@ -11,37 +12,38 @@ import java.util.List;
 public class TBList implements Serializable {
     private static final long serialVersionUID = -5649306527668993984L;
 
-    private Error           error;
+    private Error          error;
+
+    @SerializedName("forum_info")
     private List<ForumInfo> forumInfo;
     @SerializedName("show_dialog")
-    private String showDialog;
+    private String         showDialog;
     @SerializedName("sign_notice")
-    private String signNotice;
-    private String title;
+    private String         signNotice;
+    private String         title;
     @SerializedName("text_pre")
-    private String textPre;
+    private String         textPre;
     @SerializedName("text_color")
-    private String textColor;
+    private String         textColor;
     @SerializedName("text_mid")
-    private String textMid;
+    private String         textMid;
     @SerializedName("text_suf")
-    private String textSuf;
+    private String         textSuf;
     @SerializedName("num_notice")
-    private String numNotice;
-    private String level;
+    private String         numNotice;
+    private String         level;
     @SerializedName("sign_max_num")
-    private String signMaxNum;
-    private String valid;
+    private String         signMaxNum;
+    private String         valid;
     @SerializedName("msign_step_num")
-    private String msignStepNum;
+    private String         msignStepNum;
     @SerializedName("server_time")
-    private String serverTime;
-    private String time;
-    private String ctime;
-    private String logid;
+    private String         serverTime;
+    private String         time;
+    private String         ctime;
+    private String         logid;
     @SerializedName("error_code")
-    private String errorCode;
-
+    private String         errorCode;
 
 
     public Error getError() {

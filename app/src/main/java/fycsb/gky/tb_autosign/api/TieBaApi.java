@@ -4,10 +4,12 @@ package fycsb.gky.tb_autosign.api;
  * Created by codefu on 2014/12/27.
  */
 public class TieBaApi {
-    public static final String URL            = "http://c.tieba.baidu.com";
+    public static final String HOST_URL       = "http://c.tieba.baidu.com";
     public static final String LOGIN          = "/c/s/login";
     public static final String SIGN_LIST_URL  = "/c/f/forum/getforumlist";
     public static final String SIGN_URL       = "/c/c/forum/msign";
+
+
     public static final String CLIENT_ID      = "_client_id=wappc_1419610591515_691";
     public static final String CLIENT_TYPE    = "_client_type=2";
     public static final String CLIENT_VERSION = "_client_version=5.1.1";
@@ -30,7 +32,7 @@ public class TieBaApi {
     public static final String UN             = "un=";
     public static final String FLAG           = "tiebaclient!!!";
 
-
+    public static final String BDUSS_KEY          = "BDUSS";
     public static final String CLIENT_ID_KEY      = "_client_id";
     public static final String CLIENT_TYPE_KEY    = "_client_type";
     public static final String CLIENT_VERSION_KEY = "_client_version";
@@ -54,6 +56,7 @@ public class TieBaApi {
     public static final String SIGN_KEY           = "sign";
     public static final String VCODE              = "vcode";
     public static final String VCODE_MD5          = "vcode_md5";
+    public static final String USER_ID_KEY        = "user_id";
 
     public static final String CLIENT_ID_VALUE      = "wappc_1419610591515_691";
     public static final String CLIENT_TYPE_VALUE    = "2";
@@ -72,9 +75,19 @@ public class TieBaApi {
     public static final String STSIZE_VALUE         = "93";
     public static final String STTIME_VALUE         = "48";
     public static final String STTIMESNUM_VALUE     = "0";
+
+
+
+
     public static final String ID                   = "id";
     public static final String NAME                 = "name";
     public static final String DBUSS                = "DBUSS";
     public static final String PORTRAIT             = "portrait";
     public static final String TBS                  = "tbs";
+
+
+
+    public static final String FORUM_ID = "forum_id";
+    public static final String FORUM_NAME = "forum_name";
+
 }

@@ -29,7 +29,7 @@ public class TiebaRequest extends Request<String> {
      * Creates a new request with the given method.
      *
      * @param method        the request {@link Method} to use
-     * @param url           URL to fetch the string at
+     * @param url           HOST_URL to fetch the string at
      * @param listener      Listener to receive the String response
      * @param errorListener Error listener, or null to ignore errors
      */
@@ -42,7 +42,7 @@ public class TiebaRequest extends Request<String> {
     /**
      * Creates a new GET request.
      *
-     * @param url           URL to fetch the string at
+     * @param url           HOST_URL to fetch the string at
      * @param listener      Listener to receive the String response
      * @param errorListener Error listener, or null to ignore errors
      */

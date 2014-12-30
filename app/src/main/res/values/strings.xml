@@ -10,5 +10,6 @@
     <string name="config">configuration_</string>
     <string name="title_activity_auto_sign">AutoSignActivity</string>
     <string name="please_input_vcode">请输入验证码:</string>
-
+    <string name="last_login_user">last_login_user</string>
+    <string name="tieba_id">tieba_id_config_</string>
 </resources>

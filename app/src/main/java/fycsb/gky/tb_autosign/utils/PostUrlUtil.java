@@ -48,6 +48,30 @@ public class PostUrlUtil {
         return map;
     }
 
+
+    public static Map<String,String> getTiebaIDParams(String bduss,String userID,long time,String sign) {
+        Map<String,String> map = new LinkedHashMap<>(20);
+        map.put(TieBaApi.BDUSS_KEY,bduss);
+        map.put(TieBaApi.CLIENT_ID_KEY, TieBaApi.CLIENT_ID_VALUE);
+        map.put(TieBaApi.CLIENT_TYPE_KEY, TieBaApi.CLIENT_TYPE_VALUE);
+        map.put(TieBaApi.CLIENT_VERSION_KEY, TieBaApi.CLIENT_VERSION_VALUE);
+        map.put(TieBaApi.PHONE_IMEI_KEY, TieBaApi.PHONE_IMEI_VALUE);
+        map.put(TieBaApi.CUID_KEY, TieBaApi.CUID_VALUE);
+        map.put(TieBaApi.FROM_KEY, TieBaApi.FROM_VALUE);
+        map.put(TieBaApi.MODEL_KEY, TieBaApi.MODEL_VALUE);
+        map.put(TieBaApi.NET_TYPE_KEY, TieBaApi.NET_TYPE_VALUE);
+        map.put(TieBaApi.STERRORNUMS_KEY, TieBaApi.STERRORNUMS_VALUE);
+        map.put(TieBaApi.STMETHOD_KEY, TieBaApi.STMETHOD_VALUE);
+        map.put(TieBaApi.STMODE_KEY, TieBaApi.STMODE_VALUE);
+        map.put(TieBaApi.STSIZE_KEY, TieBaApi.STSIZE_VALUE);
+        map.put(TieBaApi.STTIME_KEY, TieBaApi.STTIME_VALUE);
+        map.put(TieBaApi.STTIMESNUM_KEY, TieBaApi.STTIMESNUM_VALUE);
+        map.put(TieBaApi.TIMESTAMP_KEY, Long.toString(time));
+        map.put(TieBaApi.USER_ID_KEY,userID);
+        map.put(TieBaApi.SIGN_KEY,sign);
+        return map;
+    }
+
     public static String getPostParams(String username, String password, long time,String...vcodes) throws IOException {
         StringBuffer sb = new StringBuffer();
         sb.append(TieBaApi.CLIENT_ID);
@@ -110,10 +134,40 @@ public class PostUrlUtil {
         }
         return sign;
     }
-//    public static String getSign(String params) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-//        String sign = MD5Util.getMD5(params).toUpperCase();
-//        return sign;
-//    }
+    public static String getSign(String params) {
+        String sign = null;
+        try {
 
+            System.out.println(URLDecoder.decode(params));
+            sign = MD5Util.getMD5(URLDecoder.decode(params)).toUpperCase();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return sign;
+    }
+    public static String getTieBaIDSign(String bduss,String userID,long time) {
+        StringBuilder sb = new StringBuilder(25);
+        sb.append(TieBaApi.BDUSS_KEY).append("=").append(bduss);
+        sb.append(TieBaApi.CLIENT_ID);
+        sb.append(TieBaApi.CLIENT_TYPE);
+        sb.append(TieBaApi.CLIENT_VERSION);
+        sb.append(TieBaApi.PHONE_IMEI);
+        sb.append(TieBaApi.CUID);
+        sb.append(TieBaApi.FROM);
+        sb.append(TieBaApi.MODEL);
+        sb.append(TieBaApi.NET_TYPE);
+        sb.append(TieBaApi.STERRORNUMS);
+        sb.append(TieBaApi.STMETHOD);
+        sb.append(TieBaApi.STMODE);
+        sb.append(TieBaApi.STSIZE);
+        sb.append(TieBaApi.STTIME);
+        sb.append(TieBaApi.STTIMESNUM);
+        sb.append(TieBaApi.TIMESTAMP).append(time);
+        sb.append(TieBaApi.USER_ID_KEY).append("=").append(userID);
+        sb.append(TieBaApi.FLAG);
+        return PostUrlUtil.getSign(sb.toString());
+    }
 
 }

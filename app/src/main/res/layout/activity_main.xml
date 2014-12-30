@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"/>
     <EditText
         android:id="@+id/vcode_msg"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:hint="@string/please_input_vcode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         android:layout_alignParentStart="true"/>
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/vcode_img"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:layout_width="60dp"
         android:layout_height="30dp"
         android:layout_alignTop="@id/vcode_msg"
@@ -44,6 +44,7 @@
         android:id="@+id/login_but"
         android:text="@string/login_info"
         android:layout_below="@id/vcode_msg"
+        android:paddingTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/button_style"/>

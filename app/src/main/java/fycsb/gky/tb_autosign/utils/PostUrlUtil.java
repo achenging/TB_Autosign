@@ -5,7 +5,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import fycsb.gky.tb_autosign.api.TieBaApi;
@@ -48,7 +50,6 @@ public class PostUrlUtil {
         return map;
     }
 
-
     public static Map<String,String> getTiebaIDParams(String bduss,String userID,long time,String sign) {
         Map<String,String> map = new LinkedHashMap<>(20);
         map.put(TieBaApi.BDUSS_KEY,bduss);
@@ -69,6 +70,11 @@ public class PostUrlUtil {
         map.put(TieBaApi.TIMESTAMP_KEY, Long.toString(time));
         map.put(TieBaApi.USER_ID_KEY,userID);
         map.put(TieBaApi.SIGN_KEY,sign);
+        return map;
+    }
+
+    public static Map<String,List<String>> getAutoSignParams() {
+        Map<String,List<String>> map = new HashMap<>();
         return map;
     }
 
@@ -134,6 +140,7 @@ public class PostUrlUtil {
         }
         return sign;
     }
+
     public static String getSign(String params) {
         String sign = null;
         try {
@@ -147,7 +154,8 @@ public class PostUrlUtil {
         }
         return sign;
     }
-    public static String getTieBaIDSign(String bduss,String userID,long time) {
+
+    public static String getTieBaIDSign(String bduss,String userID,long time ) {
         StringBuilder sb = new StringBuilder(25);
         sb.append(TieBaApi.BDUSS_KEY).append("=").append(bduss);
         sb.append(TieBaApi.CLIENT_ID);
@@ -169,5 +177,6 @@ public class PostUrlUtil {
         sb.append(TieBaApi.FLAG);
         return PostUrlUtil.getSign(sb.toString());
     }
+
 
 }

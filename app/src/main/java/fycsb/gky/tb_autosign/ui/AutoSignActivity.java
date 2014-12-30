@@ -15,6 +15,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -22,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import fycsb.gky.tb_autosign.R;
 import fycsb.gky.tb_autosign.api.TieBaApi;
@@ -102,7 +104,7 @@ public class AutoSignActivity extends ActionBarActivity implements View.OnClickL
                     mProgressBar.setVisibility(View.GONE);
                     Toast.makeText(AutoSignActivity.this,"获取成功...",Toast.LENGTH_SHORT).show();
                 }else {
-
+                    Toast.makeText(AutoSignActivity.this,"账户已过期或密码错误...",Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Response.ErrorListener() {
@@ -122,18 +124,12 @@ public class AutoSignActivity extends ActionBarActivity implements View.OnClickL
 
     private void saveUserTiebaID(TBList tbList) {
         List<ForumInfo> idList = tbList.getForumInfo();
-        Set<String> forumIDSet = new HashSet<>();
-        Set<String> forumNameSet = new HashSet<>();
-        Iterator<ForumInfo> iterator = idList.iterator();
-        while (iterator.hasNext()) {
-            ForumInfo forumInfo = iterator.next();
-            forumIDSet.add(forumInfo.getForumId());
-            forumNameSet.add(forumInfo.getForumName());
-        }
+        Gson gson = new Gson();
+        String forumInfoJson = gson.toJson(idList);
+        Log.i("JSON>>>>>>>>>>>>>>>>>>>>>.",forumInfoJson);
         SharedPreferences userTieBaIDSharedPreferences = getSharedPreferences(getString(R.string.tieba_id) + username, MODE_PRIVATE);
         SharedPreferences.Editor userTieBaEditor = userTieBaIDSharedPreferences.edit();
-        userTieBaEditor.putStringSet(TieBaApi.FORUM_ID, forumIDSet);
-        userTieBaEditor.putStringSet(TieBaApi.FORUM_NAME, forumNameSet);
+        userTieBaEditor.putString(TieBaApi.FORUM_INFO,forumInfoJson);
         userTieBaEditor.commit();
 
     }
@@ -150,6 +146,24 @@ public class AutoSignActivity extends ActionBarActivity implements View.OnClickL
             return true;
         }
         return false;
+    }
+    private void autoSign() {
+        TiebaRequest signRequest = new TiebaRequest(Request.Method.POST,TieBaApi.HOST_URL + TieBaApi.SIGN_URL,new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        },new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return super.getParams();
+            }
+        };
     }
 
 }

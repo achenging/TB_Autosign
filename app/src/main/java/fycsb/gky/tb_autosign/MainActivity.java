@@ -43,8 +43,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private String vcode;
     private String vcodeMD5;
     private Date   date;
-    private long timeStamp;
+    private long   timeStamp;
     private String vcodeUrl;
+    private String name;
+    private String tbs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,9 +57,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void initConfig() {
-        String name = lastLogin();
-        if (name != null) {
-            goTiebaAutoSign(name);
+        if (isLastLogin()) {
+            goTiebaAutoSign(name,tbs);
         }
     }
 
@@ -146,31 +148,33 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void saveUser(UserMsg userMsg) {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.config) + userMsg.getUser().getName(), MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(TieBaApi.ID, userMsg.getUser().getId())
+        editor.putString(TieBaApi.USER_ID, userMsg.getUser().getId())
                 .putString(TieBaApi.NAME, userMsg.getUser().getName())
                 .putString(TieBaApi.DBUSS, userMsg.getUser().getBDUSS())
                 .putString(TieBaApi.PORTRAIT, userMsg.getUser().getPortrait())
                 .putString(TieBaApi.TBS, userMsg.getAnti().getTbs());
 
         editor.commit();
-        saveLastLoginUser(userMsg.getUser().getName());
-        goTiebaAutoSign(userMsg.getUser().getName());
+        saveLastLoginUser(userMsg.getUser().getName(), userMsg.getAnti().getTbs());
+        goTiebaAutoSign(userMsg.getUser().getName(), userMsg.getAnti().getTbs());
     }
 
-    private void saveLastLoginUser(String name) {
+    private void saveLastLoginUser(String name, String tbs) {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.last_login_user), MODE_PRIVATE);
-        sharedPreferences.edit().putString(TieBaApi.NAME, name).commit();
+        sharedPreferences.edit().putString(TieBaApi.NAME, name).putString(TieBaApi.TBS, tbs).commit();
     }
 
-    private String lastLogin() {
+    private boolean isLastLogin() {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.last_login_user), MODE_PRIVATE);
-        String name = sharedPreferences.getString(TieBaApi.NAME, null);
-        return name;
+        name = sharedPreferences.getString(TieBaApi.NAME, null);
+        tbs = sharedPreferences.getString(TieBaApi.TBS, null);
+        return name == null && tbs == null ? false : true;
     }
 
-    private void goTiebaAutoSign(String name) {
+    private void goTiebaAutoSign(String name, String tbs) {
         Intent autoSignIntent = new Intent(MainActivity.this, AutoSignActivity.class);
-        autoSignIntent.putExtra(TieBaApi.NAME,name);
+        autoSignIntent.putExtra(TieBaApi.NAME, name);
+        autoSignIntent.putExtra(TieBaApi.TBS, tbs);
         startActivity(autoSignIntent);
     }
 

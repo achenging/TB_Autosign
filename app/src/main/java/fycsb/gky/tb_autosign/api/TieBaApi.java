@@ -57,8 +57,8 @@ public class TieBaApi {
     public static final String VCODE              = "vcode";
     public static final String VCODE_MD5          = "vcode_md5";
     public static final String USER_ID_KEY        = "user_id";
-    public static final String FORUM_IDS          = "forum_ids";
-
+    public static final String FORUM_IDS_KEY      = "forum_ids";
+    public static final String TBS_KEY            = "tbs";
 
     public static final String CLIENT_ID_VALUE      = "wappc_1419610591515_691";
     public static final String CLIENT_TYPE_VALUE    = "2";
@@ -79,7 +79,7 @@ public class TieBaApi {
     public static final String STTIMESNUM_VALUE     = "0";
 
 
-    public static final String ID       = "id";
+    public static final String USER_ID  = "id";
     public static final String NAME     = "name";
     public static final String DBUSS    = "DBUSS";
     public static final String PORTRAIT = "portrait";

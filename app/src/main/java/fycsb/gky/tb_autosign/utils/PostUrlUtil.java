@@ -74,15 +74,15 @@ public class PostUrlUtil {
         return map;
     }
 
-    public static Map<String, String> getAutoSignParams(String bduss, String userID, String tbs,long time,String sign, String forumids) {
+    public static Map<String, String> getAutoSignParams(String bduss, String userID, String tbs, long time, String sign, String forumids) {
         Map<String, String> map = new HashMap<>();
-        map.put(TieBaApi.BDUSS_KEY,bduss);
-        map.put(TieBaApi.CLIENT_ID_KEY,TieBaApi.CLIENT_ID_VALUE);
+        map.put(TieBaApi.BDUSS_KEY, bduss);
+        map.put(TieBaApi.CLIENT_ID_KEY, TieBaApi.CLIENT_ID_VALUE);
         map.put(TieBaApi.CLIENT_TYPE_KEY, TieBaApi.CLIENT_TYPE_VALUE);
         map.put(TieBaApi.CLIENT_VERSION_KEY, TieBaApi.CLIENT_VERSION_VALUE);
         map.put(TieBaApi.PHONE_IMEI_KEY, TieBaApi.PHONE_IMEI_VALUE);
         map.put(TieBaApi.CUID_KEY, TieBaApi.CUID_VALUE);
-        map.put(TieBaApi.FORUM_IDS_KEY,forumids);
+        map.put(TieBaApi.FORUM_IDS_KEY, forumids);
         map.put(TieBaApi.FROM_KEY, TieBaApi.FROM_VALUE);
         map.put(TieBaApi.MODEL_KEY, TieBaApi.MODEL_VALUE);
         map.put(TieBaApi.NET_TYPE_KEY, TieBaApi.NET_TYPE_VALUE);
@@ -92,7 +92,7 @@ public class PostUrlUtil {
         map.put(TieBaApi.STSIZE_KEY, TieBaApi.STSIZE_VALUE);
         map.put(TieBaApi.STTIME_KEY, TieBaApi.STTIME_VALUE);
         map.put(TieBaApi.STTIMESNUM_KEY, TieBaApi.STTIMESNUM_VALUE);
-        map.put(TieBaApi.TBS_KEY,tbs);
+        map.put(TieBaApi.TBS_KEY, tbs);
         map.put(TieBaApi.TIMESTAMP_KEY, Long.toString(time));
         map.put(TieBaApi.USER_ID_KEY, userID);
         map.put(TieBaApi.SIGN_KEY, sign);
@@ -165,9 +165,7 @@ public class PostUrlUtil {
     public static String getSign(String params) {
         String sign = null;
         try {
-
-            System.out.println(URLDecoder.decode(params));
-            sign = MD5Util.getMD5(URLDecoder.decode(params)).toUpperCase();
+            sign = MD5Util.getMD5(URLDecoder.decode(params.replaceAll("&", ""))).toUpperCase();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
@@ -199,37 +197,79 @@ public class PostUrlUtil {
         return PostUrlUtil.getSign(sb.toString());
     }
 
-    public static String getTieBaForumIdsSign(String bduss, String uerID, String tbs,long time, String forumIds) {
+    public static String getTieBaForumIdsContent(String bduss, String uerID, String tbs, long time, String forumIds) {
         StringBuilder sb = new StringBuilder();
-        sb.append(TieBaApi.BDUSS_KEY).append("=").append(bduss);
-        sb.append(TieBaApi.CLIENT_ID);
-        sb.append(TieBaApi.CLIENT_TYPE);
-        sb.append(TieBaApi.CLIENT_VERSION);
-        sb.append(TieBaApi.PHONE_IMEI);
-        sb.append(TieBaApi.CUID);
-        sb.append(TieBaApi.FORUM_IDS_KEY).append("=").append(forumIds);
-        sb.append(TieBaApi.FROM);
-        sb.append(TieBaApi.MODEL);
-        sb.append(TieBaApi.NET_TYPE);
-        sb.append(TieBaApi.STERRORNUMS);
-        sb.append(TieBaApi.STMETHOD);
-        sb.append(TieBaApi.STMODE);
-        sb.append(TieBaApi.STSIZE);
-        sb.append(TieBaApi.STTIME);
-        sb.append(TieBaApi.STTIMESNUM);
-        sb.append(TieBaApi.TBS_KEY).append("=").append(tbs);
-        sb.append(TieBaApi.TIMESTAMP_KEY).append("=").append(time);
-        sb.append(TieBaApi.USER_ID_KEY).append("=").append(uerID);
+        sb.append(TieBaApi.BDUSS_KEY).append("=").append(bduss).append("&");
+        sb.append(TieBaApi.CLIENT_ID).append("&");
+        sb.append(TieBaApi.CLIENT_TYPE).append("&");
+        sb.append(TieBaApi.CLIENT_VERSION).append("&");
+        sb.append(TieBaApi.PHONE_IMEI).append("&");
+        sb.append(TieBaApi.CUID).append("&");
+        sb.append(TieBaApi.FORUM_IDS_KEY).append("=").append(forumIds).append("&");
+        sb.append(TieBaApi.FROM).append("&");
+        sb.append(TieBaApi.MODEL).append("&");
+        sb.append(TieBaApi.NET_TYPE).append("&");
+        sb.append(TieBaApi.STERRORNUMS).append("&");
+        sb.append(TieBaApi.STMETHOD).append("&");
+        sb.append(TieBaApi.STMODE).append("&");
+        sb.append(TieBaApi.STSIZE).append("&");
+        sb.append(TieBaApi.STTIME).append("&");
+        sb.append(TieBaApi.STTIMESNUM).append("&");
+        sb.append(TieBaApi.TBS_KEY).append("=").append(tbs).append("&");
+        sb.append(TieBaApi.TIMESTAMP_KEY).append("=").append(time).append("&");
+        sb.append(TieBaApi.USER_ID_KEY).append("=").append(uerID).append("&");
         sb.append(TieBaApi.FLAG);
-        return PostUrlUtil.getSign(sb.toString());
+        return sb.toString();
     }
+
     public static String parseForumdids(List<ForumInfo> forumInfos) {
         StringBuilder sb = new StringBuilder();
         int len = forumInfos.size();
         for (int i = 0; i < len; i++) {
             sb.append(forumInfos.get(i).getForumId());
-            if (i < len -1 ) sb.append(",");
+            if (i < len - 1) sb.append(",");
         }
         return sb.toString();
+    }
+
+    public static String getLikeTieBaContent(String bduss, long time) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(TieBaApi.BDUSS_KEY).append("=").append(bduss).append("&");
+        sb.append(TieBaApi.CLIENT_ID).append("&");
+        sb.append(TieBaApi.CLIENT_TYPE).append("&");
+        sb.append(TieBaApi.CLIENT_VERSION).append("&");
+        sb.append(TieBaApi.PHONE_IMEI).append("&");
+        sb.append(TieBaApi.CUID).append("&");
+        sb.append(TieBaApi.FROM).append("&");
+        sb.append(TieBaApi.MODEL).append("&");
+        sb.append(TieBaApi.NET_TYPE).append("&");
+        sb.append(TieBaApi.STERRORNUMS).append("&");
+        sb.append(TieBaApi.STMETHOD).append("&");
+        sb.append(TieBaApi.STMODE).append("&");
+        sb.append(TieBaApi.STSIZE).append("&");
+        sb.append(TieBaApi.STTIME).append("&");
+        sb.append(TieBaApi.STTIMESNUM).append("&");
+        sb.append(TieBaApi.TIMESTAMP_KEY).append("=").append(time).append("&");
+        sb.append(TieBaApi.FLAG);
+        return sb.toString();
+    }
+
+    public static Map<String, String> getMapParams(String params) {
+        String[] keyValues = params.split("&");
+        Map<String, String> map = new LinkedHashMap<String, String>();
+
+        for (int i = 0; i < keyValues.length; i++) {
+
+            System.out.println(">>>>>>>>>>>" + keyValues[i]);
+            String[] args = keyValues[i].split("=");
+
+            map.put(args[0], args[1]);
+        }
+        return map;
+    }
+
+    public static String removeFlag(String str,String sign) {
+        return str.substring(0,str.length()-TieBaApi.FLAG.length());
+
     }
 }

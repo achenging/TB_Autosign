@@ -8,7 +8,7 @@ public class TieBaApi {
     public static final String LOGIN         = "/c/s/login";
     public static final String SIGN_LIST_URL = "/c/f/forum/getforumlist";
     public static final String SIGN_URL      = "/c/c/forum/msign";
-
+    public static final String LIKE_URL      = "/c/f/forum/like";
 
     public static final String CLIENT_ID      = "_client_id=wappc_1419610591515_691";
     public static final String CLIENT_TYPE    = "_client_type=2";

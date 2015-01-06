@@ -1,22 +1,24 @@
-package fycsb.gky.tb_autosign.ui;
+package fycsb.gky.tb_autosign.ui.fragment;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.romainpiel.shimmer.Shimmer;
+import com.romainpiel.shimmer.ShimmerTextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,8 +38,9 @@ import fycsb.gky.tb_autosign.http.TiebaRequest;
 import fycsb.gky.tb_autosign.http.VolleySingleton;
 import fycsb.gky.tb_autosign.utils.PostUrlUtil;
 
-public class AutoSignActivity extends ActionBarActivity implements View.OnClickListener {
-    private TextView        mUsername;
+
+public class SevenLevelSignFragment extends Fragment implements View.OnClickListener {
+    private ShimmerTextView mUsername;
     private Button          mStartSignBut;
     private ProgressBar     mProgressBar;
     private TextView        mSignMsg;
@@ -48,45 +51,74 @@ public class AutoSignActivity extends ActionBarActivity implements View.OnClickL
     private String          username;
     private String          tbs;
     private List<ForumInfo> idList;
+    private Shimmer         shimmer;
+
+    public static SevenLevelSignFragment newInstance(String username, String tbs) {
+        SevenLevelSignFragment fragment = new SevenLevelSignFragment();
+        Bundle args = new Bundle();
+        args.putString(TieBaApi.NAME, username);
+        args.putString(TieBaApi.TBS, tbs);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public SevenLevelSignFragment() {
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_auto_sign);
-        init();
+        if (getArguments() != null) {
+            username = getArguments().getString(TieBaApi.NAME);
+            tbs = getArguments().getString(TieBaApi.TBS);
+        }
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_seven_level_sign, container, false);
+        init(view);
         if (!hasUserTiebaData()) {
-            Toast.makeText(AutoSignActivity.this, "第一次使用该账号,正在获取贴吧id...", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "第一次使用该账号,正在获取贴吧id...", Toast.LENGTH_LONG).show();
             initUserTiebaData();
         } else {
             mStartSignBut.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.GONE);
         }
+        return view;
     }
 
-    private void init() {
 
-        mUsername = (TextView) findViewById(R.id.username);
-        mStartSignBut = (Button) findViewById(R.id.start_sign_but);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
-        mSignMsg = (TextView) findViewById(R.id.sign_msg);
-        mSignMsg.setTextSize(25);
+    private void init(View view) {
+
+        mUsername = (ShimmerTextView) view.findViewById(R.id.username);
+        shimmer = new Shimmer();
+        shimmer.setDuration(2000)
+                .setStartDelay(300).start(mUsername);
+        mStartSignBut = (Button) view.findViewById(R.id.start_sign_but);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressbar);
+        mSignMsg = (TextView) view.findViewById(R.id.sign_msg);
+        mSignMsg.setTextSize(20);
         mStartSignBut.setOnClickListener(this);
-        username = getIntent().getStringExtra(TieBaApi.NAME);
-        tbs = getIntent().getStringExtra(TieBaApi.TBS);
-        mUsername.setText("贴吧用户名:" + username);
+        mUsername.setText("用户名:" + username);
         date = new Date();
         time = date.getTime();
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.config) + username, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.config) + username, getActivity().MODE_PRIVATE);
         bduss = sharedPreferences.getString(TieBaApi.DBUSS, null);
         userID = sharedPreferences.getString(TieBaApi.USER_ID, null);
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.start_sign_but:
-                autoSign();
-              //  likeTieba();
+                if (idList.size() > 0)
+                    autoSign();
+                else
+                    Toast.makeText(getActivity(), "此用户暂时没有七级以上的喜欢的贴吧，请切换模式", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -103,28 +135,31 @@ public class AutoSignActivity extends ActionBarActivity implements View.OnClickL
                 String errorCode = tbList.getErrorCode();
                 if (errorCode.equals("0")) {
                     saveUserTiebaID(tbList);
-                    Toast.makeText(AutoSignActivity.this, "获取成功...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "获取成功...", Toast.LENGTH_SHORT).show();
                     if (loadUserTiebaData()) {
                         mStartSignBut.setVisibility(View.VISIBLE);
                         mProgressBar.setVisibility(View.GONE);
                     }
                 } else {
-                    Toast.makeText(AutoSignActivity.this, "账户已过期或密码错误...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "获取失败...", Toast.LENGTH_SHORT).show();
+                    mProgressBar.setVisibility(View.GONE);
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(AutoSignActivity.this, "未知错误...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "未知错误...", Toast.LENGTH_SHORT).show();
             }
         }) {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                String sign = PostUrlUtil.getTieBaIDSign(bduss, userID, time);
-                return PostUrlUtil.getTiebaIDParams(bduss, userID, time, sign);
+            protected Map<String, String> getParams() {
+                String content = PostUrlUtil.getTieBaIDContent(bduss, userID, time);
+                String sign = PostUrlUtil.getSign(content);
+                content = PostUrlUtil.removeFlag(content);
+                return PostUrlUtil.getParams(content + "sign=" + sign);
             }
         };
-        VolleySingleton.getInstance(AutoSignActivity.this).getmRequestQueue().add(tiebaIdRequest);
+        VolleySingleton.getInstance(getActivity()).getmRequestQueue().add(tiebaIdRequest);
     }
 
     private void saveUserTiebaID(TBList tbList) {
@@ -132,7 +167,7 @@ public class AutoSignActivity extends ActionBarActivity implements View.OnClickL
         Gson gson = new Gson();
         String forumInfoJson = gson.toJson(idList);
         Log.i("JSON>>>>>>>>>>>>>>>>>>>>>.", forumInfoJson);
-        SharedPreferences userTieBaIDSharedPreferences = getSharedPreferences(getString(R.string.tieba_id) + username, MODE_PRIVATE);
+        SharedPreferences userTieBaIDSharedPreferences = getActivity().getSharedPreferences(getString(R.string.tieba_id) + username, getActivity().MODE_PRIVATE);
         SharedPreferences.Editor userTieBaEditor = userTieBaIDSharedPreferences.edit();
         userTieBaEditor.putString(TieBaApi.FORUM_INFO, forumInfoJson);
         userTieBaEditor.commit();
@@ -140,7 +175,7 @@ public class AutoSignActivity extends ActionBarActivity implements View.OnClickL
     }
 
     private boolean loadUserTiebaData() {
-        SharedPreferences userTieBaIDSharedPreferences = getSharedPreferences(getString(R.string.tieba_id) + username, MODE_PRIVATE);
+        SharedPreferences userTieBaIDSharedPreferences = getActivity().getSharedPreferences(getString(R.string.tieba_id) + username, getActivity().MODE_PRIVATE);
         boolean flag = userTieBaIDSharedPreferences.contains(TieBaApi.FORUM_INFO);
         if (flag) {
             String forumJson = userTieBaIDSharedPreferences.getString(TieBaApi.FORUM_INFO, null);
@@ -164,16 +199,16 @@ public class AutoSignActivity extends ActionBarActivity implements View.OnClickL
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     JSONObject errorJsonObject = jsonObject.getJSONObject("error");
-                    Log.i("errorJson---->",errorJsonObject.toString());
-                    String usermsg = errorJsonObject.getString("errno");
-                    if ("340011".equals(usermsg)) {
+                    Log.i("errorJson---->", errorJsonObject.toString());
+                    String errno = errorJsonObject.getString("errno");
+                    if ("340011".equals(errno)) {
 
 //                          签过之后再签到的情况，暂时是不知道为什么会返回这样的json数据
 //                        mSignMsg.setText(errorJsonObject.getString("usermsg"));
-                        Toast.makeText(AutoSignActivity.this,"七级以上的贴吧已签到...",Toast.LENGTH_SHORT).show();
-                    }else {
+                        Toast.makeText(getActivity(), "七级以上的贴吧已签到...", Toast.LENGTH_SHORT).show();
+                    } else {
                         Gson gson = new Gson();
-                        SignState signState = gson.fromJson(response,SignState.class);
+                        SignState signState = gson.fromJson(response, SignState.class);
                         List<ForumState> forumStateList = signState.getInfo();
                         printLog(forumStateList);
                     }
@@ -185,19 +220,19 @@ public class AutoSignActivity extends ActionBarActivity implements View.OnClickL
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(AutoSignActivity.this,"请检查网络....",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "请检查网络....", Toast.LENGTH_SHORT).show();
             }
         }) {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 String forumIds = PostUrlUtil.parseForumdids(idList);
                 String str = PostUrlUtil.getTieBaForumIdsContent(bduss, userID, tbs, time, forumIds);
                 String sign = PostUrlUtil.getSign(str);
-                str = PostUrlUtil.removeFlag(str,sign);
-                return PostUrlUtil.getMapParams(str + "sign=" + sign);
+                str = PostUrlUtil.removeFlag(str);
+                return PostUrlUtil.getParams(str + "sign=" + sign);
             }
         };
-        VolleySingleton.getInstance(AutoSignActivity.this).getmRequestQueue().add(signRequest);
+        VolleySingleton.getInstance(getActivity()).getmRequestQueue().add(signRequest);
     }
 
     private <T> void printLog(List<T> list) {
@@ -207,26 +242,15 @@ public class AutoSignActivity extends ActionBarActivity implements View.OnClickL
         }
     }
 
+    @Override
+    public void onStop() {
+        shimmer.cancel();
+        super.onStop();
+    }
 
-    private void likeTieba() {
-        TiebaRequest likeRequest = new TiebaRequest(Request.Method.POST, TieBaApi.HOST_URL + TieBaApi.LIKE_URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(AutoSignActivity.this,"请检查网络....",Toast.LENGTH_SHORT).show();
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                String str = PostUrlUtil.getLikeTieBaContent(bduss,time);
-                String sign = PostUrlUtil.getSign(str);
-                return PostUrlUtil.getMapParams(str + "sign=" + sign);
-            }
-        };
-        VolleySingleton.getInstance(AutoSignActivity.this).getmRequestQueue().add(likeRequest);
+    @Override
+    public void onResume() {
+        shimmer.start(mUsername);
+        super.onResume();
     }
 }

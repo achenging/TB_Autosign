@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,10 +19,9 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Map;
-
 import fycsb.gky.tb_autosign.api.TieBaApi;
 import fycsb.gky.tb_autosign.entity.UserMsg;
 import fycsb.gky.tb_autosign.http.TiebaRequest;
@@ -37,7 +37,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Button                                      mLoginButton;
     private com.android.volley.toolbox.NetworkImageView mVcodeImage;
     private EditText                                    mVcodeEditText;
-
     private String errorCode = "0";
     private String sign;
     private String vcode;
@@ -52,13 +51,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle(R.string.login_activity_name);
         initConfig();
         init();
     }
 
     private void initConfig() {
         if (isLastLogin()) {
-            goTiebaAutoSign(name,tbs);
+            goTiebaAutoSign(name, tbs);
         }
     }
 
@@ -78,15 +78,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_but:
-
                 final String username = mUsername.getText().toString();
                 final String password = mPassword.getText().toString();
-
-                if (errorCode.equals("0")) {
-                    sign = PostUrlUtil.getSign(username, password, timeStamp);
-                } else if (errorCode.equals("5") || errorCode.equals("6")) {
-                    sign = PostUrlUtil.getVcodeSign(username, password, timeStamp, vcode, vcodeMD5);
-                }
                 TiebaRequest stringRequest = null;
                 stringRequest = new TiebaRequest(
                         Request.Method.POST,
@@ -105,8 +98,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                 if (errorCode.equals("0")) {
                                     saveUser(userMsg);
                                 } else if (errorCode.equals("5")) {
-                                    mVcodeImage.setVisibility(View.VISIBLE);
                                     mVcodeEditText.setVisibility(View.VISIBLE);
+                                    mVcodeImage.setVisibility(View.VISIBLE);
                                     setImageVcodeData(userMsg);
                                     vcode = mVcodeEditText.getText().toString();
                                 } else if (errorCode.equals("6")) {
@@ -126,15 +119,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         }) {
                     @Override
                     protected Map<String, String> getParams() {
+                        String content = null;
                         try {
-                            return PostUrlUtil.getParamsHashMap(username, password, timeStamp, sign, vcode, vcodeMD5);
-                        } catch (IOException e) {
+                            if (errorCode.equals("0")) {
+                                content = PostUrlUtil.getPostContent(username, password, timeStamp);
+                            } else if (errorCode.equals("5") || errorCode.equals("6")) {
+                                content = PostUrlUtil.getPostContent(username, password, timeStamp, vcode, vcodeMD5);
+                            }
+                        } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
-                        return null;
+
+                        sign = PostUrlUtil.getSign(content);
+                        content = PostUrlUtil.removeFlag(content);
+                        return PostUrlUtil.getParams(content + "sign=" + sign);
                     }
                 };
-                VolleySingleton.getInstance(MainActivity.this).addRequest(stringRequest);
+                if (!("".equals(username) && "".equals(password)))
+                    VolleySingleton.getInstance(MainActivity.this).addRequest(stringRequest);
+                else
+                    Toast.makeText(MainActivity.this, "贴吧id或密码不能为空", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -175,6 +179,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         Intent autoSignIntent = new Intent(MainActivity.this, AutoSignActivity.class);
         autoSignIntent.putExtra(TieBaApi.NAME, name);
         autoSignIntent.putExtra(TieBaApi.TBS, tbs);
+        autoSignIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(autoSignIntent);
     }
 
@@ -195,5 +200,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             vcode = s.toString();
         }
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+            case KeyEvent.KEYCODE_SPACE:
+                finish();
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 
 }

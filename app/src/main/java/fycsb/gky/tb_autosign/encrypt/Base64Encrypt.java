@@ -9,13 +9,13 @@ import java.io.UnsupportedEncodingException;
 /**
  * Created by codefu on 2014/8/27.
  */
-public class BASE64Util {
-    public static byte[] deBASE(String key) throws IOException {
+public class Base64Encrypt {
+    public static byte[] decode(String key) throws IOException {
         return Base64.decode(key.getBytes(), Base64.DEFAULT);
     }
 
-    public static String enBASE64(byte[] key) throws UnsupportedEncodingException {
-        return new String( Base64.encode(key, Base64.DEFAULT),"utf-8");
+    public static String encode(byte[] key) throws UnsupportedEncodingException {
+        return Base64.encodeToString(key,Base64.NO_WRAP);
     }
 
 }

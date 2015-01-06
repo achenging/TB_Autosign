@@ -348,7 +348,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      * @deprecated Use {@link #getParams()} instead.
      */
     @Deprecated
-    protected Map<String, String> getPostParams() throws AuthFailureError {
+    protected Map<String, String> getPostParams(){
         return getParams();
     }
 
@@ -407,7 +407,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      *
      * @throws AuthFailureError in the event of auth failure
      */
-    protected Map<String, String> getParams() throws AuthFailureError {
+    protected Map<String, String> getParams(){
         return null;
     }
 
@@ -443,7 +443,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      *
      * @throws AuthFailureError in the event of auth failure
      */
-    public byte[] getBody() throws AuthFailureError {
+    public byte[] getBody() {
         Map<String, String> params = getParams();
         if (params != null && params.size() > 0) {
             return encodeParameters(params, getParamsEncoding());

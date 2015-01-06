@@ -2,50 +2,54 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:paddingBottom="@dimen/activity_vertical_margin"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
                 tools:context=".MainActivity">
 
     <EditText
         android:id="@+id/username"
-        android:text="aa656464129"
-        android:hint="@string/username_info"
-        android:layout_centerInParent="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:hint="@string/username_info"
+        android:singleLine="true"/>
+
     <EditText
         android:id="@+id/password"
-        android:password="true"
-        android:text="azhanging"
-        android:hint="@string/password_info"
-        android:layout_below="@+id/username"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/username"
+        android:hint="@string/password_info"
+        android:password="true"
+        android:singleLine="true"/>
+
     <EditText
         android:id="@+id/vcode_msg"
-        android:visibility="gone"
-        android:hint="@string/please_input_vcode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/password"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/password"
+        android:hint="@string/please_input_vcode"
+        android:visibility="gone"/>
+
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/vcode_img"
-        android:visibility="gone"
         android:layout_width="60dp"
         android:layout_height="30dp"
         android:layout_alignTop="@id/vcode_msg"
+        android:layout_toEndOf="@id/vcode_msg"
         android:layout_toRightOf="@id/vcode_msg"
-        android:layout_toEndOf="@id/vcode_msg"/>
+        android:visibility="gone"/>
+
     <Button
         android:id="@+id/login_but"
-        android:text="@string/login_info"
-        android:layout_below="@id/vcode_msg"
-        android:paddingTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_style"/>
+        android:layout_below="@id/vcode_msg"
+        android:background="@drawable/button_style"
+        android:paddingTop="5dp"
+        android:text="@string/login_info"/>
 </RelativeLayout>

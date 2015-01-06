@@ -4,33 +4,33 @@ package fycsb.gky.tb_autosign.api;
  * Created by codefu on 2014/12/27.
  */
 public class TieBaApi {
-    public static final String HOST_URL      = "http://c.tieba.baidu.com";
-    public static final String LOGIN         = "/c/s/login";
-    public static final String SIGN_LIST_URL = "/c/f/forum/getforumlist";
-    public static final String SIGN_URL      = "/c/c/forum/msign";
-    public static final String LIKE_URL      = "/c/f/forum/like";
-
-    public static final String CLIENT_ID      = "_client_id=wappc_1419610591515_691";
-    public static final String CLIENT_TYPE    = "_client_type=2";
-    public static final String CLIENT_VERSION = "_client_version=5.1.1";
-    public static final String PHONE_IMEI     = "_phone_imei=000000000000000";
-    public static final String CHANNEL_ID     = "channel_id=3971370984300604405";
-    public static final String CHANNEL_UID    = "channel_uid=1055742506309009273";
-    public static final String CUID           = "cuid=709831DDD4CBADB28DAA316524933278%7C000000000000000";
-    public static final String FROM           = "from=tieba";
-    public static final String ISPHONE        = "isphone=0";
-    public static final String MODEL          = "model=Motorola+Moto+X+-+4.2.2+-+API+17+-+720x1280";
-    public static final String NET_TYPE       = "net_type=3";
-    public static final String PASSWD         = "passwd=";
-    public static final String STERRORNUMS    = "stErrorNums=0";
-    public static final String STMETHOD       = "stMethod=1";
-    public static final String STMODE         = "stMode=1";
-    public static final String STSIZE         = "stSize=93";
-    public static final String STTIME         = "stTime=48";
-    public static final String STTIMESNUM     = "stTimesNum=0";
-    public static final String TIMESTAMP      = "timestamp=";
-    public static final String UN             = "un=";
-    public static final String FLAG           = "tiebaclient!!!";
+    public static final String HOST_URL        = "http://c.tieba.baidu.com";
+    public static final String LOGIN           = "/c/s/login";
+    public static final String SIGN_LIST_URL   = "/c/f/forum/getforumlist";
+    public static final String SIGN_URL        = "/c/c/forum/msign";
+    public static final String LIKE_URL        = "/c/f/forum/like";
+    public static final String SINGLE_SIGN_URL = "/c/c/forum/sign";
+    public static final String CLIENT_ID       = "_client_id=wappc_1419610591515_691";
+    public static final String CLIENT_TYPE     = "_client_type=2";
+    public static final String CLIENT_VERSION  = "_client_version=5.1.1";
+    public static final String PHONE_IMEI      = "_phone_imei=000000000000000";
+    public static final String CHANNEL_ID      = "channel_id=3971370984300604405";
+    public static final String CHANNEL_UID     = "channel_uid=1055742506309009273";
+    public static final String CUID            = "cuid=709831DDD4CBADB28DAA316524933278%7C000000000000000";
+    public static final String FROM            = "from=tieba";
+    public static final String ISPHONE         = "isphone=0";
+    public static final String MODEL           = "model=Motorola+Moto+X";
+    public static final String NET_TYPE        = "net_type=3";
+    public static final String PASSWD          = "passwd=";
+    public static final String STERRORNUMS     = "stErrorNums=0";
+    public static final String STMETHOD        = "stMethod=1";
+    public static final String STMODE          = "stMode=1";
+    public static final String STSIZE          = "stSize=93";
+    public static final String STTIME          = "stTime=48";
+    public static final String STTIMESNUM      = "stTimesNum=0";
+    public static final String TIMESTAMP       = "timestamp=";
+    public static final String UN              = "un=";
+    public static final String FLAG            = "tiebaclient!!!";
 
     public static final String BDUSS_KEY          = "BDUSS";
     public static final String CLIENT_ID_KEY      = "_client_id";
@@ -59,6 +59,9 @@ public class TieBaApi {
     public static final String USER_ID_KEY        = "user_id";
     public static final String FORUM_IDS_KEY      = "forum_ids";
     public static final String TBS_KEY            = "tbs";
+    public static final String FID_KEY                = "fid";
+    public static final String KW_KEY                 = "kw";
+
 
     public static final String CLIENT_ID_VALUE      = "wappc_1419610591515_691";
     public static final String CLIENT_TYPE_VALUE    = "2";

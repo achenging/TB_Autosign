@@ -40,16 +40,24 @@
         android:text="暂时只能签50个七级以上的贴吧,若要签低于七级的请切换签到模式\n"
         android:textColor="@color/red"/>
 
-    <ScrollView
-        android:id="@+id/scroll"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_below="@+id/start_sign_but"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tips"
-        android:paddingTop="10dp">
+        android:layout_height="match_parent"
+        android:divider="@color/black"/>
 
-        <TextView
-            android:id="@+id/sign_msg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </ScrollView>
+
+    <!--<ScrollView-->
+        <!--android:id="@+id/scroll"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/tips"-->
+        <!--android:paddingTop="10dp">-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/sign_msg"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"/>-->
+    <!--</ScrollView>-->
 </RelativeLayout>

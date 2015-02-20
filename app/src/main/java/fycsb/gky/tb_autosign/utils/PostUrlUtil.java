@@ -1,5 +1,9 @@
 package fycsb.gky.tb_autosign.utils;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.security.NoSuchAlgorithmException;
@@ -16,7 +20,6 @@ import fycsb.gky.tb_autosign.entity.ForumInfo;
  * Created by codefu on 2014/12/27.
  */
 public class PostUrlUtil {
-
 
 
     public static String getPostContent(String username, String password, long time, String... vcodes)
@@ -138,14 +141,14 @@ public class PostUrlUtil {
         String[] keyValues = params.split("&");
         Map<String, String> map = new LinkedHashMap<String, String>();
         for (int i = 0; i < keyValues.length; i++) {
-            String[] args = keyValues[i].split("=",2);
+            String[] args = keyValues[i].split("=", 2);
             map.put(args[0], args[1]);
         }
         return map;
     }
 
     public static String removeFlag(String str) {
-        return str.substring(0,str.length()-TieBaApi.FLAG.length());
+        return str.substring(0, str.length() - TieBaApi.FLAG.length());
 
     }
 
@@ -159,7 +162,7 @@ public class PostUrlUtil {
         return sb.toString();
     }
 
-    public static String getSingleSignContent(String bduss,String fid,String kw,String tbs,long time) {
+    public static String getSingleSignContent(String bduss, String fid, String kw, String tbs, long time) {
         StringBuilder sb = new StringBuilder(40);
         sb.append(TieBaApi.BDUSS_KEY).append("=").append(bduss).append("&");
         sb.append(TieBaApi.CLIENT_ID).append("&");
@@ -182,5 +185,14 @@ public class PostUrlUtil {
         sb.append(TieBaApi.TIMESTAMP).append(time).append("&");
         sb.append(TieBaApi.FLAG);
         return sb.toString();
+    }
+
+    public static boolean isConnected(Context connext) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) connext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = connectivityManager.getActiveNetworkInfo();
+        if (info != null && info.isConnected()) {
+            return true;
+        }
+        return false;
     }
 }

@@ -23,7 +23,7 @@
 
     <!-- menu 菜单 -->
     <string name="change_mode_info">切换模式</string>
-    <!-- <string name="change_user_info">切换用户</string> -->
+     <string name="change_user_info">切换用户</string>
     <string name="about_info">关于</string>
     <string name="exit_info">退出</string>
     <string name="title_activity_about">关于</string>

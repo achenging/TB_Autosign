@@ -4,11 +4,15 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,12 +26,14 @@ import com.romainpiel.shimmer.ShimmerTextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import fycsb.gky.tb_autosign.R;
+import fycsb.gky.tb_autosign.adapter.CustomRecyclerAdapter;
 import fycsb.gky.tb_autosign.api.TieBaApi;
 import fycsb.gky.tb_autosign.entity.ForumList;
 import fycsb.gky.tb_autosign.entity.LikeTieba;
@@ -36,19 +42,21 @@ import fycsb.gky.tb_autosign.http.VolleySingleton;
 import fycsb.gky.tb_autosign.utils.PostUrlUtil;
 
 public class OneByOneSignFragment extends Fragment implements View.OnClickListener {
-    private ShimmerTextView mUsername;
-    private Button          mStartSignBut;
-    private TextView        mSignMsg;
-    private String          bduss;
-    private String          tbs;
-    private String          username;
-    private long            time;
-    private Date            date;
-    private List<ForumList> forumLists;
-    private Shimmer         shimmer;
-    private int             count;
-    private int             signCount;
-    private int             alreadySign;
+    private ShimmerTextView       mUsername;
+    private Button                mStartSignBut;
+    private RecyclerView          mRecyclerView;
+    private CustomRecyclerAdapter mRecyclerAdapter;
+    private List<String>          data;
+    private String                bduss;
+    private String                tbs;
+    private String                username;
+    private long                  time;
+    private Date                  date;
+    private List<ForumList>       forumLists;
+    private Shimmer               shimmer;
+    private int                   count;
+    private int                   signCount;
+    private int                   alreadySign;
 
     public static OneByOneSignFragment newInstance(String username, String tbs) {
         OneByOneSignFragment fragment = new OneByOneSignFragment();
@@ -85,6 +93,7 @@ public class OneByOneSignFragment extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.start_sign_but:
+                data.clear();
                 likeTieba();
 //                mSignMsg.append("你关注的贴吧数为:"+ count + ",本次签到数为:" + signCount + ",已签到数为:" + alreadySign);
                 break;
@@ -101,14 +110,19 @@ public class OneByOneSignFragment extends Fragment implements View.OnClickListen
         shimmer.setDuration(2000)
                 .setStartDelay(300).start(mUsername);
         mStartSignBut = (Button) view.findViewById(R.id.start_sign_but);
-        mSignMsg = (TextView) view.findViewById(R.id.sign_msg);
-        mSignMsg.setTextSize(15);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
         mStartSignBut.setOnClickListener(this);
         mUsername.setText("用户名:" + username);
         date = new Date();
         time = date.getTime();
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.config) + username, getActivity().MODE_PRIVATE);
         bduss = sharedPreferences.getString(TieBaApi.DBUSS, null);
+        data = new ArrayList<>(50);
+        mRecyclerAdapter = new CustomRecyclerAdapter(getActivity(),data);
+        mRecyclerView.setAdapter(mRecyclerAdapter);
 
     }
 
@@ -125,9 +139,7 @@ public class OneByOneSignFragment extends Fragment implements View.OnClickListen
                 while (iterator.hasNext()) {
                     ForumList forumList = iterator.next();
                     sign(forumList.getId(), forumList.getName());
-                    Log.i("QUEUE NUMBER >>>>>", VolleySingleton.getInstance(getActivity()).getmRequestQueue().getSequenceNumber() + "");
                 }
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -159,10 +171,12 @@ public class OneByOneSignFragment extends Fragment implements View.OnClickListen
                     e.printStackTrace();
                 }
                 if (errorCode.equals("0")) {
-                    mSignMsg.append(kw + " >> 签到成功\n");
+                    data.add(String.format("%s%s",kw," 签到成功"));
+                    mRecyclerAdapter.notifyDataSetChanged();
                     ++signCount;
                 } else if (errorCode.equals("160002")) {
-                    mSignMsg.append(kw + " >> 已签过了..Orz..\n");
+                    data.add(String.format("%s%s", kw, " 已签过了..Orz.."));
+                    mRecyclerAdapter.notifyDataSetChanged();
                     ++alreadySign;
                 }
             }

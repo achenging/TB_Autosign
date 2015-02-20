@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Map;
+
 import fycsb.gky.tb_autosign.api.TieBaApi;
 import fycsb.gky.tb_autosign.entity.UserMsg;
 import fycsb.gky.tb_autosign.http.TiebaRequest;
@@ -37,15 +38,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Button                                      mLoginButton;
     private com.android.volley.toolbox.NetworkImageView mVcodeImage;
     private EditText                                    mVcodeEditText;
+    private String                                      sign;
+    private String                                      vcode;
+    private String                                      vcodeMD5;
+    private Date                                        date;
+    private long                                        timeStamp;
+    private String                                      vcodeUrl;
+    private String                                      name;
+    private String                                      tbs;
     private String errorCode = "0";
-    private String sign;
-    private String vcode;
-    private String vcodeMD5;
-    private Date   date;
-    private long   timeStamp;
-    private String vcodeUrl;
-    private String name;
-    private String tbs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +55,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         setTitle(R.string.login_activity_name);
         initConfig();
         init();
+
     }
 
     private void initConfig() {
         if (isLastLogin()) {
             goTiebaAutoSign(name, tbs);
         }
+
     }
 
     private void init() {
@@ -78,6 +81,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_but:
+                if (!PostUrlUtil.isConnected(MainActivity.this)) {
+                    Toast.makeText(MainActivity.this, "请检查网络连接...>>>", Toast.LENGTH_SHORT).show();
+                    break;
+                }
                 final String username = mUsername.getText().toString();
                 final String password = mPassword.getText().toString();
                 TiebaRequest stringRequest = null;

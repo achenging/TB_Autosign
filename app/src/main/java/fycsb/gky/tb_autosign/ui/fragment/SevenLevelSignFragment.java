@@ -3,6 +3,8 @@ package fycsb.gky.tb_autosign.ui.fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import fycsb.gky.tb_autosign.R;
+import fycsb.gky.tb_autosign.adapter.CustomRecyclerAdapter;
 import fycsb.gky.tb_autosign.api.TieBaApi;
 import fycsb.gky.tb_autosign.entity.ForumInfo;
 import fycsb.gky.tb_autosign.entity.ForumState;
@@ -40,18 +43,20 @@ import fycsb.gky.tb_autosign.utils.PostUrlUtil;
 
 
 public class SevenLevelSignFragment extends Fragment implements View.OnClickListener {
-    private ShimmerTextView mUsername;
-    private Button          mStartSignBut;
-    private ProgressBar     mProgressBar;
-    private TextView        mSignMsg;
-    private String          bduss;
-    private String          userID;
-    private long            time;
-    private Date            date;
-    private String          username;
-    private String          tbs;
-    private List<ForumInfo> idList;
-    private Shimmer         shimmer;
+    private ShimmerTextView       mUsername;
+    private Button                mStartSignBut;
+    private ProgressBar           mProgressBar;
+    private TextView              mSignMsg;
+    private RecyclerView          mRecyclerView;
+    private CustomRecyclerAdapter mRecyclerAdapter;
+    private String                bduss;
+    private String                userID;
+    private long                  time;
+    private Date                  date;
+    private String                username;
+    private String                tbs;
+    private List<ForumInfo>       idList;
+    private Shimmer               shimmer;
 
     public static SevenLevelSignFragment newInstance(String username, String tbs) {
         SevenLevelSignFragment fragment = new SevenLevelSignFragment();
@@ -103,6 +108,10 @@ public class SevenLevelSignFragment extends Fragment implements View.OnClickList
         mSignMsg.setTextSize(20);
         mStartSignBut.setOnClickListener(this);
         mUsername.setText("用户名:" + username);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
         date = new Date();
         time = date.getTime();
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.config) + username, getActivity().MODE_PRIVATE);

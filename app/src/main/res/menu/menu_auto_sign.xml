@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="fycsb.gky.tb_autosign.ui.AutoSignActivity">
+
+    <item android:id="@+id/chang_mode"
+          android:title="@string/change_mode_info"
+          app:showAsAction="never"/>
+    <item android:id="@+id/chang_user"
+        android:title="@string/change_user_info"
+        app:showAsAction="never"/>
+    <item android:id="@+id/about"
+          android:title="@string/about_info"
+          app:showAsAction="never"/>
+    <item android:id="@+id/exit"
+          android:title="@string/exit_info"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
+
+</menu>

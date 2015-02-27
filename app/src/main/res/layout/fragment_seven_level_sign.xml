@@ -6,6 +6,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
+                android:tag="SEVEN_LEVEL"
                 tools:context="fycsb.gky.tb_autosign.ui.AutoSignActivity">
 
     <com.romainpiel.shimmer.ShimmerTextView
@@ -48,16 +49,16 @@
         android:divider="@color/black"/>
 
 
-    <!--<ScrollView-->
-        <!--android:id="@+id/scroll"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@+id/tips"-->
-        <!--android:paddingTop="10dp">-->
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tips"
+        android:paddingTop="10dp">
 
-        <!--<TextView-->
-            <!--android:id="@+id/sign_msg"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"/>-->
-    <!--</ScrollView>-->
+        <TextView
+            android:id="@+id/sign_msg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </ScrollView>
 </RelativeLayout>

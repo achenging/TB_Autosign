@@ -2,6 +2,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:tag="ONE_BY_ONE"
                 tools:context="fycsb.gky.tb_autosign.ui.AutoSignActivity">
     <com.romainpiel.shimmer.ShimmerTextView
         android:id="@+id/username"

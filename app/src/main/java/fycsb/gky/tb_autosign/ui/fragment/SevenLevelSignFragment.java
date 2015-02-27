@@ -1,5 +1,6 @@
 package fycsb.gky.tb_autosign.ui.fragment;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import fycsb.gky.tb_autosign.MainActivity;
 import fycsb.gky.tb_autosign.R;
 import fycsb.gky.tb_autosign.adapter.CustomRecyclerAdapter;
 import fycsb.gky.tb_autosign.api.TieBaApi;
@@ -69,7 +71,7 @@ public class SevenLevelSignFragment extends Fragment implements View.OnClickList
 
     public SevenLevelSignFragment() {
     }
-
+    public static final String DEBUG_TAG = ">>>>>>>>>>>>>>>>>>>>";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +79,13 @@ public class SevenLevelSignFragment extends Fragment implements View.OnClickList
             username = getArguments().getString(TieBaApi.NAME);
             tbs = getArguments().getString(TieBaApi.TBS);
         }
+//        else {
+//            Toast.makeText(getActivity(),"不能获取信息",Toast.LENGTH_SHORT).show();
+//            Intent it = new Intent(getActivity(),MainActivity.class);
+//            it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            it.putExtra("NoGetUserInfo",true);
+//            startActivity(it);
+//        }
         setHasOptionsMenu(true);
     }
 
@@ -134,6 +143,7 @@ public class SevenLevelSignFragment extends Fragment implements View.OnClickList
 
     //得到超过七级的贴吧的id，并保存到文件
     private void initUserTiebaData() {
+
         TiebaRequest tiebaIdRequest = new TiebaRequest(Request.Method.POST, TieBaApi.HOST_URL + TieBaApi.SIGN_LIST_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -149,7 +159,12 @@ public class SevenLevelSignFragment extends Fragment implements View.OnClickList
                         mStartSignBut.setVisibility(View.VISIBLE);
                         mProgressBar.setVisibility(View.GONE);
                     }
-                } else {
+                }
+//                else if (errorCode.equals("1")) {
+//                    getActivity().getSharedPreferences(getString(R.string.last_login_user), getActivity().MODE_PRIVATE).edit().clear().commit();
+//                    startActivity(new Intent(getActivity(),MainActivity.class));
+//                }
+                 else {
                     Toast.makeText(getActivity(), "获取失败...", Toast.LENGTH_SHORT).show();
                     mProgressBar.setVisibility(View.GONE);
                 }
@@ -175,7 +190,7 @@ public class SevenLevelSignFragment extends Fragment implements View.OnClickList
         List<ForumInfo> idList = tbList.getForumInfo();
         Gson gson = new Gson();
         String forumInfoJson = gson.toJson(idList);
-        Log.i("JSON>>>>>>>>>>>>>>>>>>>>>.", forumInfoJson);
+        Log.i("JSON>>>>>>>>>>>>>>>>>>.", forumInfoJson);
         SharedPreferences userTieBaIDSharedPreferences = getActivity().getSharedPreferences(getString(R.string.tieba_id) + username, getActivity().MODE_PRIVATE);
         SharedPreferences.Editor userTieBaEditor = userTieBaIDSharedPreferences.edit();
         userTieBaEditor.putString(TieBaApi.FORUM_INFO, forumInfoJson);

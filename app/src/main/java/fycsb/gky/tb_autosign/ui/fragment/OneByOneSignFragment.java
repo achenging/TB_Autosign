@@ -1,5 +1,6 @@
 package fycsb.gky.tb_autosign.ui.fragment;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 
@@ -32,9 +34,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import fycsb.gky.tb_autosign.MainActivity;
 import fycsb.gky.tb_autosign.R;
 import fycsb.gky.tb_autosign.adapter.CustomRecyclerAdapter;
 import fycsb.gky.tb_autosign.api.TieBaApi;
+import fycsb.gky.tb_autosign.entity.ForumInfo;
 import fycsb.gky.tb_autosign.entity.ForumList;
 import fycsb.gky.tb_autosign.entity.LikeTieba;
 import fycsb.gky.tb_autosign.http.TiebaRequest;
@@ -104,7 +108,9 @@ public class OneByOneSignFragment extends Fragment implements View.OnClickListen
         public void onFragmentInteraction(Uri uri);
     }
 
+
     private void init(View view) {
+
         mUsername = (ShimmerTextView) view.findViewById(R.id.username);
         shimmer = new Shimmer();
         shimmer.setDuration(2000)
@@ -133,6 +139,9 @@ public class OneByOneSignFragment extends Fragment implements View.OnClickListen
             public void onResponse(String response) {
                 Gson gson = new Gson();
                 LikeTieba likeTieba = gson.fromJson(response, LikeTieba.class);
+                if (likeTieba.getErrorCode().equals("1")){
+                    startActivity(new Intent(getActivity(),MainActivity.class));
+                }
                 forumLists = likeTieba.getForumList();
                 count = forumLists.size();
                 Iterator<ForumList> iterator = forumLists.iterator();

@@ -3,12 +3,13 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="fycsb.gky.tb_autosign.ui.AutoSignActivity">
 
-    <item android:id="@+id/chang_mode"
-          android:title="@string/change_mode_info"
-          app:showAsAction="never"/>
+
     <item android:id="@+id/chang_user"
         android:title="@string/change_user_info"
-        app:showAsAction="never"/>
+        app:showAsAction="always"/>
+    <item android:id="@+id/settings"
+        android:title="设置"
+        app:showAsAction="always"/>
     <item android:id="@+id/about"
           android:title="@string/about_info"
           app:showAsAction="never"/>

@@ -31,7 +31,7 @@ MERGED from TB_AutoSign:volley:unspecified:9:5
 		ADDED from AndroidManifest.xml:9:9
 	android:theme
 		ADDED from AndroidManifest.xml:11:9
-activity#fycsb.gky.tb_autosign.MainActivity
+activity#fycsb.gky.tb_autosign.ui.MainActivity
 ADDED from AndroidManifest.xml:12:9
 	android:name
 		ADDED from AndroidManifest.xml:13:13

@@ -1,4 +1,4 @@
-package fycsb.gky.tb_autosign;
+package fycsb.gky.tb_autosign.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,12 +23,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Map;
 
+import fycsb.gky.tb_autosign.R;
 import fycsb.gky.tb_autosign.api.TieBaApi;
 import fycsb.gky.tb_autosign.entity.UserMsg;
 import fycsb.gky.tb_autosign.http.TiebaRequest;
 import fycsb.gky.tb_autosign.http.VolleySingleton;
-import fycsb.gky.tb_autosign.ui.AutoSignActivity;
-import fycsb.gky.tb_autosign.ui.BaseActivity;
 import fycsb.gky.tb_autosign.utils.PostUrlUtil;
 
 

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -31,7 +32,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import fycsb.gky.tb_autosign.MainActivity;
 import fycsb.gky.tb_autosign.R;
 import fycsb.gky.tb_autosign.adapter.CustomRecyclerAdapter;
 import fycsb.gky.tb_autosign.api.TieBaApi;
@@ -41,23 +41,26 @@ import fycsb.gky.tb_autosign.entity.SignState;
 import fycsb.gky.tb_autosign.entity.TBList;
 import fycsb.gky.tb_autosign.http.TiebaRequest;
 import fycsb.gky.tb_autosign.http.VolleySingleton;
+import fycsb.gky.tb_autosign.ui.MainActivity;
 import fycsb.gky.tb_autosign.utils.PostUrlUtil;
 
 
-public class SevenLevelSignFragment extends Fragment implements View.OnClickListener {
+public class SevenLevelSignFragment extends Fragment
+        implements View.OnClickListener,SwipeRefreshLayout.OnRefreshListener {
     private ShimmerTextView       mUsername;
     private Button                mStartSignBut;
     private ProgressBar           mProgressBar;
     private TextView              mSignMsg;
     private RecyclerView          mRecyclerView;
     private CustomRecyclerAdapter mRecyclerAdapter;
+    private String                tbs;
+    private List<ForumInfo>       idList;
+    private SwipeRefreshLayout    mSwipeRefreshLayout;
     private String                bduss;
     private String                userID;
     private long                  time;
     private Date                  date;
     private String                username;
-    private String                tbs;
-    private List<ForumInfo>       idList;
     private Shimmer               shimmer;
 
     public static SevenLevelSignFragment newInstance(String username, String tbs) {
@@ -71,21 +74,24 @@ public class SevenLevelSignFragment extends Fragment implements View.OnClickList
 
     public SevenLevelSignFragment() {
     }
+
     public static final String DEBUG_TAG = ">>>>>>>>>>>>>>>>>>>>";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+
             username = getArguments().getString(TieBaApi.NAME);
             tbs = getArguments().getString(TieBaApi.TBS);
+
+        } else {
+            Toast.makeText(getActivity(),"不能获取信息",Toast.LENGTH_SHORT).show();
+            Intent it = new Intent(getActivity(),MainActivity.class);
+            it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            it.putExtra("NoGetUserInfo", true);
+            startActivity(it);
         }
-//        else {
-//            Toast.makeText(getActivity(),"不能获取信息",Toast.LENGTH_SHORT).show();
-//            Intent it = new Intent(getActivity(),MainActivity.class);
-//            it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            it.putExtra("NoGetUserInfo",true);
-//            startActivity(it);
-//        }
         setHasOptionsMenu(true);
     }
 
@@ -94,19 +100,86 @@ public class SevenLevelSignFragment extends Fragment implements View.OnClickList
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_seven_level_sign, container, false);
         init(view);
-        if (!hasUserTiebaData()) {
-            Toast.makeText(getActivity(), "第一次使用该账号,正在获取贴吧id...", Toast.LENGTH_LONG).show();
-            initUserTiebaData();
-        } else {
-            mStartSignBut.setVisibility(View.VISIBLE);
-            mProgressBar.setVisibility(View.GONE);
-        }
+
         return view;
     }
 
 
-    private void init(View view) {
 
+    //viewpager加载的时候在可见时才加载网络部分
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            if (!hasUserTiebaData()) {
+                Toast.makeText(getActivity(), "第一次使用该账号,正在获取贴吧id...", Toast.LENGTH_LONG).show();
+                initUserTiebaData();
+            } else {
+                mStartSignBut.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.GONE);
+            }
+        }
+    }
+
+
+
+    @Override
+    public void onRefresh() {
+        TextView textView = new TextView(getActivity());
+        textView.setText("正在刷新贴吧列表");
+        mSwipeRefreshLayout.setTag(textView);
+        mSwipeRefreshLayout.addView(textView);
+        initUserTiebaData();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.start_sign_but:
+                if (idList.size() > 0)
+                    autoSign();
+                else
+                    Toast.makeText(getActivity(), "此用户暂时没有七级以上的喜欢的贴吧，请切换模式", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    @Override
+    public void onStop() {
+        shimmer.cancel();
+        super.onStop();
+    }
+
+    @Override
+    public void onResume() {
+        shimmer.start(mUsername);
+        super.onResume();
+    }
+
+
+    private boolean hasUserTiebaData() {
+        return loadUserTiebaData();
+    }
+
+    private boolean loadUserTiebaData() {
+        SharedPreferences userTieBaIDSharedPreferences = getActivity().getSharedPreferences(getString(R.string.tieba_id) + username, getActivity().MODE_PRIVATE);
+        boolean flag = userTieBaIDSharedPreferences.contains(TieBaApi.FORUM_INFO);
+        if (flag) {
+            String forumJson = userTieBaIDSharedPreferences.getString(TieBaApi.FORUM_INFO, null);
+            Gson gson = new Gson();
+            idList = gson.fromJson(forumJson, new TypeToken<List<ForumInfo>>() {
+            }.getType());
+            return true;
+        }
+        return false;
+
+    }
+
+
+
+    private void init(View view) {
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipelayout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         mUsername = (ShimmerTextView) view.findViewById(R.id.username);
         shimmer = new Shimmer();
         shimmer.setDuration(2000)
@@ -129,17 +202,7 @@ public class SevenLevelSignFragment extends Fragment implements View.OnClickList
 
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.start_sign_but:
-                if (idList.size() > 0)
-                    autoSign();
-                else
-                    Toast.makeText(getActivity(), "此用户暂时没有七级以上的喜欢的贴吧，请切换模式", Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
+
 
     //得到超过七级的贴吧的id，并保存到文件
     private void initUserTiebaData() {
@@ -147,31 +210,36 @@ public class SevenLevelSignFragment extends Fragment implements View.OnClickList
         TiebaRequest tiebaIdRequest = new TiebaRequest(Request.Method.POST, TieBaApi.HOST_URL + TieBaApi.SIGN_LIST_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
-                Log.i("START LOAD DATA", response);
+                Log.d("START LOAD DATA", response);
                 Gson gson = new Gson();
                 TBList tbList = gson.fromJson(response, TBList.class);
                 String errorCode = tbList.getErrorCode();
                 if (errorCode.equals("0")) {
+                    mSwipeRefreshLayout.setRefreshing(false);
                     saveUserTiebaID(tbList);
                     Toast.makeText(getActivity(), "获取成功...", Toast.LENGTH_SHORT).show();
-                    if (loadUserTiebaData()) {
-                        mStartSignBut.setVisibility(View.VISIBLE);
-                        mProgressBar.setVisibility(View.GONE);
-                    }
+
+//暂时不知道做什么写的的代码，貌似是检查是否保存成功
+//                    if (loadUserTiebaData()) {
+//                        mStartSignBut.setVisibility(View.VISIBLE);
+//                        mProgressBar.setVisibility(View.GONE);
+//                    }
+                } else if (errorCode.equals("1")) {         //账号信息不存在或者出现错误，导致的未登录行为，删除配置，重新登陆
+                    getActivity().getSharedPreferences(getString(R.string.last_login_user), getActivity().MODE_PRIVATE).edit().clear().commit();
+                    startActivity(new Intent(getActivity(),MainActivity.class));
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
-//                else if (errorCode.equals("1")) {
-//                    getActivity().getSharedPreferences(getString(R.string.last_login_user), getActivity().MODE_PRIVATE).edit().clear().commit();
-//                    startActivity(new Intent(getActivity(),MainActivity.class));
-//                }
-                 else {
+                else {
                     Toast.makeText(getActivity(), "获取失败...", Toast.LENGTH_SHORT).show();
                     mProgressBar.setVisibility(View.GONE);
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                mProgressBar.setVisibility(View.GONE);
+                mSwipeRefreshLayout.setRefreshing(false);
                 Toast.makeText(getActivity(), "未知错误...", Toast.LENGTH_SHORT).show();
             }
         }) {
@@ -186,6 +254,7 @@ public class SevenLevelSignFragment extends Fragment implements View.OnClickList
         VolleySingleton.getInstance(getActivity()).getmRequestQueue().add(tiebaIdRequest);
     }
 
+    //保存需要签到的贴吧id，下次可以不用重新获取，省电省流量
     private void saveUserTiebaID(TBList tbList) {
         List<ForumInfo> idList = tbList.getForumInfo();
         Gson gson = new Gson();
@@ -195,26 +264,9 @@ public class SevenLevelSignFragment extends Fragment implements View.OnClickList
         SharedPreferences.Editor userTieBaEditor = userTieBaIDSharedPreferences.edit();
         userTieBaEditor.putString(TieBaApi.FORUM_INFO, forumInfoJson);
         userTieBaEditor.commit();
-
     }
 
-    private boolean loadUserTiebaData() {
-        SharedPreferences userTieBaIDSharedPreferences = getActivity().getSharedPreferences(getString(R.string.tieba_id) + username, getActivity().MODE_PRIVATE);
-        boolean flag = userTieBaIDSharedPreferences.contains(TieBaApi.FORUM_INFO);
-        if (flag) {
-            String forumJson = userTieBaIDSharedPreferences.getString(TieBaApi.FORUM_INFO, null);
-            Gson gson = new Gson();
-            idList = gson.fromJson(forumJson, new TypeToken<List<ForumInfo>>() {
-            }.getType());
-            return true;
-        }
-        return false;
 
-    }
-
-    private boolean hasUserTiebaData() {
-        return loadUserTiebaData();
-    }
 
     private void autoSign() {
         TiebaRequest signRequest = new TiebaRequest(Request.Method.POST, TieBaApi.HOST_URL + TieBaApi.SIGN_URL, new Response.Listener<String>() {
@@ -266,15 +318,6 @@ public class SevenLevelSignFragment extends Fragment implements View.OnClickList
         }
     }
 
-    @Override
-    public void onStop() {
-        shimmer.cancel();
-        super.onStop();
-    }
 
-    @Override
-    public void onResume() {
-        shimmer.start(mUsername);
-        super.onResume();
-    }
+
 }

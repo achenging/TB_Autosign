@@ -7,21 +7,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.LayoutAnimationController;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 
@@ -34,11 +30,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import fycsb.gky.tb_autosign.MainActivity;
+import fycsb.gky.tb_autosign.ui.MainActivity;
 import fycsb.gky.tb_autosign.R;
 import fycsb.gky.tb_autosign.adapter.CustomRecyclerAdapter;
 import fycsb.gky.tb_autosign.api.TieBaApi;
-import fycsb.gky.tb_autosign.entity.ForumInfo;
 import fycsb.gky.tb_autosign.entity.ForumList;
 import fycsb.gky.tb_autosign.entity.LikeTieba;
 import fycsb.gky.tb_autosign.http.TiebaRequest;
@@ -81,6 +76,9 @@ public class OneByOneSignFragment extends Fragment implements View.OnClickListen
         if (getArguments() != null) {
             username = getArguments().getString(TieBaApi.NAME);
             tbs = getArguments().getString(TieBaApi.TBS);
+
+            Log.d("OneFragment --->", username);
+            Log.d("OneFragment --->",tbs);
         }
     }
 

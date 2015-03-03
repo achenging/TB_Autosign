@@ -71,21 +71,20 @@ public class TiebaRequest extends Request<String> {
     @Override
     protected Response<String> parseNetworkResponse(NetworkResponse response) {
         String parsed;
-        Map<String, String> responseHeaders = response.headers;
-        String rawCookies = responseHeaders.get("Set-Cookie");
-        try {
-            String dataString = new String(response.data, "UTF-8");
-            System.out.println(rawCookies);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+//        Map<String, String> responseHeaders = response.headers;
+//        String rawCookies = responseHeaders.get("Set-Cookie");
+//        try {
+//            String dataString = new String(response.data, "UTF-8");
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
         parsed = getRealString(response.data);
         return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response));
 
     }
 
     private int getShort(byte[] data) {
-        return (int) ((data[0] << 8) | data[1] & 0xFF);
+        return (data[0] << 8) | data[1] & 0xFF;
     }
 
     private String getRealString(byte[] data) {

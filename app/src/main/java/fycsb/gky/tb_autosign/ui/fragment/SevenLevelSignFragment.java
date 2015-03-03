@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import fycsb.gky.tb_autosign.R;
-import fycsb.gky.tb_autosign.adapter.CustomRecyclerAdapter;
+import fycsb.gky.tb_autosign.adapter.CustomListViewAdapter;
 import fycsb.gky.tb_autosign.api.TieBaApi;
 import fycsb.gky.tb_autosign.entity.ForumInfo;
 import fycsb.gky.tb_autosign.entity.ForumState;
@@ -52,7 +52,7 @@ public class SevenLevelSignFragment extends Fragment
     private ProgressBar           mProgressBar;
     private TextView              mSignMsg;
     private RecyclerView          mRecyclerView;
-    private CustomRecyclerAdapter mRecyclerAdapter;
+    private CustomListViewAdapter mRecyclerAdapter;
     private String                tbs;
     private List<ForumInfo>       idList;
     private SwipeRefreshLayout    mSwipeRefreshLayout;
@@ -86,8 +86,8 @@ public class SevenLevelSignFragment extends Fragment
             tbs = getArguments().getString(TieBaApi.TBS);
 
         } else {
-            Toast.makeText(getActivity(),"不能获取信息",Toast.LENGTH_SHORT).show();
-            Intent it = new Intent(getActivity(),MainActivity.class);
+            Toast.makeText(getActivity(), "不能获取信息", Toast.LENGTH_SHORT).show();
+            Intent it = new Intent(getActivity(), MainActivity.class);
             it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             it.putExtra("NoGetUserInfo", true);
             startActivity(it);
@@ -100,10 +100,8 @@ public class SevenLevelSignFragment extends Fragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_seven_level_sign, container, false);
         init(view);
-
         return view;
     }
-
 
 
     //viewpager加载的时候在可见时才加载网络部分
@@ -190,7 +188,7 @@ public class SevenLevelSignFragment extends Fragment
         mSignMsg.setTextSize(20);
         mStartSignBut.setOnClickListener(this);
         mUsername.setText("用户名:" + username);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.listView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);

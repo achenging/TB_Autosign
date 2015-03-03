@@ -20,7 +20,6 @@ public class CusPageChangedListener implements ViewPager.OnPageChangeListener {
 
     @Override
     public void onPageSelected(int i) {
-        actionBar.selectTab(actionBar.getTabAt(i));
     }
 
     @Override

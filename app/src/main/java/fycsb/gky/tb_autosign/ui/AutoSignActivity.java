@@ -1,20 +1,16 @@
 package fycsb.gky.tb_autosign.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import fycsb.gky.tb_autosign.R;
@@ -24,6 +20,7 @@ import fycsb.gky.tb_autosign.adapter.CusTabListener;
 import fycsb.gky.tb_autosign.api.TieBaApi;
 import fycsb.gky.tb_autosign.ui.fragment.OneByOneSignFragment;
 import fycsb.gky.tb_autosign.ui.fragment.SevenLevelSignFragment;
+import fycsb.gky.tb_autosign.ui.view.SlidingTabLayout;
 
 public class AutoSignActivity extends BaseActivity {
     private String                 username;
@@ -31,6 +28,8 @@ public class AutoSignActivity extends BaseActivity {
     private ViewPager              mViewPager;
     private OneByOneSignFragment   mAllFragment;
     private SevenLevelSignFragment mSomeFragment;
+    private Toolbar                mToolbar;
+    private SlidingTabLayout       mSlidingTabLayout;
     private List<Fragment> fragmentList = new ArrayList<>();
 
     @Override
@@ -43,23 +42,20 @@ public class AutoSignActivity extends BaseActivity {
     }
 
     private void initView() {
-        ActionBar actionBar = getSupportActionBar();
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.slidingTabLayout);
         mAllFragment = OneByOneSignFragment.newInstance(username, tbs);
         mSomeFragment = SevenLevelSignFragment.newInstance(username, tbs);
         fragmentList.add(mAllFragment);
         fragmentList.add(mSomeFragment);
-        CusPagerAdapter pagerAdapter = new CusPagerAdapter(getSupportFragmentManager(),fragmentList);
-        CusPageChangedListener pageChangedListener = new CusPageChangedListener(actionBar);
+        CusPagerAdapter pagerAdapter = new CusPagerAdapter(getSupportFragmentManager(),fragmentList,
+                Arrays.asList(new String[]{"全部","部分"}));
         mViewPager.setAdapter(pagerAdapter);
-        mViewPager.setOnPageChangeListener(pageChangedListener);
-        CusTabListener tabListener = new CusTabListener(mViewPager);
-        actionBar.setNavigationMode(getSupportActionBar().NAVIGATION_MODE_TABS);
-        ActionBar.Tab mAllTab = actionBar.newTab().setText("全部").setTabListener(tabListener);
-        ActionBar.Tab mSomeTab = actionBar.newTab().setText("部分").setTabListener(tabListener);
-        actionBar.addTab(mAllTab);
-        actionBar.addTab(mSomeTab);
+        mSlidingTabLayout.setViewPager(mViewPager,getResources().getDisplayMetrics().widthPixels);
 
+        mSlidingTabLayout.setTabStripDividerColor(getResources().getColor(R.color.grey));
     }
 
     @Override
@@ -75,7 +71,7 @@ public class AutoSignActivity extends BaseActivity {
 
                 break;
             case R.id.about:
-                Intent aboutIntent = new Intent(AutoSignActivity.this,AboutActivity.class);
+                Intent aboutIntent = new Intent(AutoSignActivity.this, AboutActivity.class);
                 aboutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(aboutIntent);
                 break;

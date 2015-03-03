@@ -17,13 +17,9 @@ import fycsb.gky.tb_autosign.R;
  */
 public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAdapter.ViewHolder> {
     private List<String> data;
-    private Context      mContext;
-    private Animation    mAnimation;
 
-    public CustomRecyclerAdapter(Context context, List<String> data) {
-        this.mContext = context;
+    public CustomRecyclerAdapter(List<String> data) {
         this.data = data;
-//        this.mAnimation = AnimationUtils.loadAnimation(this.mContext, R.anim.abc_slide_in_bottom);
     }
 
     @Override

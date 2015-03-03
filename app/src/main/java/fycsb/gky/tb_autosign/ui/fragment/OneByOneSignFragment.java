@@ -30,9 +30,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import fycsb.gky.tb_autosign.adapter.CustomRecyclerAdapter;
 import fycsb.gky.tb_autosign.ui.MainActivity;
 import fycsb.gky.tb_autosign.R;
-import fycsb.gky.tb_autosign.adapter.CustomRecyclerAdapter;
+import fycsb.gky.tb_autosign.adapter.CustomListViewAdapter;
 import fycsb.gky.tb_autosign.api.TieBaApi;
 import fycsb.gky.tb_autosign.entity.ForumList;
 import fycsb.gky.tb_autosign.entity.LikeTieba;
@@ -44,7 +45,7 @@ public class OneByOneSignFragment extends Fragment implements View.OnClickListen
     private ShimmerTextView       mUsername;
     private Button                mStartSignBut;
     private RecyclerView          mRecyclerView;
-    private CustomRecyclerAdapter mRecyclerAdapter;
+    private CustomRecyclerAdapter mRecyclerViewAdapter;
     private List<String>          data;
     private String                bduss;
     private String                tbs;
@@ -76,9 +77,6 @@ public class OneByOneSignFragment extends Fragment implements View.OnClickListen
         if (getArguments() != null) {
             username = getArguments().getString(TieBaApi.NAME);
             tbs = getArguments().getString(TieBaApi.TBS);
-
-            Log.d("OneFragment --->", username);
-            Log.d("OneFragment --->",tbs);
         }
     }
 
@@ -96,10 +94,24 @@ public class OneByOneSignFragment extends Fragment implements View.OnClickListen
         switch (v.getId()) {
             case R.id.start_sign_but:
                 data.clear();
+                mRecyclerViewAdapter.notifyDataSetChanged();
+                Toast.makeText(getActivity(), "正在尝试签到...", Toast.LENGTH_SHORT).show();
                 likeTieba();
-//                mSignMsg.append("你关注的贴吧数为:"+ count + ",本次签到数为:" + signCount + ",已签到数为:" + alreadySign);
                 break;
         }
+    }
+
+
+    @Override
+    public void onStop() {
+        shimmer.cancel();
+        super.onStop();
+    }
+
+    @Override
+    public void onResume() {
+        shimmer.start(mUsername);
+        super.onResume();
     }
 
     public interface OnFragmentInteractionListener {
@@ -114,7 +126,7 @@ public class OneByOneSignFragment extends Fragment implements View.OnClickListen
         shimmer.setDuration(2000)
                 .setStartDelay(300).start(mUsername);
         mStartSignBut = (Button) view.findViewById(R.id.start_sign_but);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -125,9 +137,8 @@ public class OneByOneSignFragment extends Fragment implements View.OnClickListen
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.config) + username, getActivity().MODE_PRIVATE);
         bduss = sharedPreferences.getString(TieBaApi.DBUSS, null);
         data = new ArrayList<>(50);
-        mRecyclerAdapter = new CustomRecyclerAdapter(getActivity(),data);
-        mRecyclerView.setAdapter(mRecyclerAdapter);
-
+        mRecyclerViewAdapter = new CustomRecyclerAdapter(data);
+        mRecyclerView.setAdapter(mRecyclerViewAdapter);
     }
 
 
@@ -137,8 +148,8 @@ public class OneByOneSignFragment extends Fragment implements View.OnClickListen
             public void onResponse(String response) {
                 Gson gson = new Gson();
                 LikeTieba likeTieba = gson.fromJson(response, LikeTieba.class);
-                if (likeTieba.getErrorCode().equals("1")){
-                    startActivity(new Intent(getActivity(),MainActivity.class));
+                if (likeTieba.getErrorCode().equals("1")) {
+                    startActivity(new Intent(getActivity(), MainActivity.class));
                 }
                 forumLists = likeTieba.getForumList();
                 count = forumLists.size();
@@ -169,21 +180,21 @@ public class OneByOneSignFragment extends Fragment implements View.OnClickListen
         TiebaRequest signRequest = new TiebaRequest(Request.Method.POST, TieBaApi.HOST_URL + TieBaApi.SINGLE_SIGN_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                JSONObject jsonObject = null;
                 String errorCode = null;
                 try {
-                    jsonObject = new JSONObject(response);
+                    JSONObject jsonObject = new JSONObject(response);
                     errorCode = jsonObject.getString("error_code");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 if (errorCode.equals("0")) {
-                    data.add(String.format("%s%s",kw," 签到成功"));
-                    mRecyclerAdapter.notifyDataSetChanged();
+                    data.add(String.format("%s%s", kw, " 签到成功"));
+                    Log.d("data >>>>>", data.toString());
+                    mRecyclerViewAdapter.notifyDataSetChanged();
                     ++signCount;
                 } else if (errorCode.equals("160002")) {
                     data.add(String.format("%s%s", kw, " 已签过了..Orz.."));
-                    mRecyclerAdapter.notifyDataSetChanged();
+                    mRecyclerViewAdapter.notifyDataSetChanged();
                     ++alreadySign;
                 }
             }
@@ -205,15 +216,4 @@ public class OneByOneSignFragment extends Fragment implements View.OnClickListen
 
     }
 
-    @Override
-    public void onStop() {
-        shimmer.cancel();
-        super.onStop();
-    }
-
-    @Override
-    public void onResume() {
-        shimmer.start(mUsername);
-        super.onResume();
-    }
 }

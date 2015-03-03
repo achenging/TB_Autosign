@@ -3,6 +3,7 @@ package fycsb.gky.tb_autosign.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 import java.util.List;
 
@@ -11,9 +12,14 @@ import java.util.List;
  */
 public class CusPagerAdapter extends FragmentPagerAdapter {
     private List<Fragment> fragments;
-    public CusPagerAdapter(FragmentManager fm,List<Fragment> fragments) {
+    private List<String> titles;
+    public CusPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
         super(fm);
         this.fragments = fragments;
+    }
+    public CusPagerAdapter(FragmentManager fm, List<Fragment> fragments, List<String> titles) {
+        this(fm, fragments);
+        this.titles = titles;
     }
 
     @Override
@@ -24,5 +30,12 @@ public class CusPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         return fragments.size();
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return titles == null?
+                super.getPageTitle(position):
+                        titles.get(position);
     }
 }

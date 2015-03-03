@@ -25,6 +25,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.romainpiel.shimmer:library:1.2.0@aar'
+    compile 'com.melnykov:floatingactionbutton:1.2.0'
     compile 'com.android.support:recyclerview-v7:21.0.3'
     compile project(':volley')
 }

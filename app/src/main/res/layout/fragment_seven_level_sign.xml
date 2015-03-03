@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="@color/black"
+        android:textColor="@color/little_grey"
         android:textSize="25sp"/>
 
     <Button
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/username"
-        android:background="@drawable/button_style"
+        android:background="@drawable/circle_button"
         android:text="@string/start_sign_info_some"
         android:visibility="gone"/>
 
@@ -42,7 +42,7 @@
         android:textColor="@color/red"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/listView"
         android:layout_below="@+id/start_sign_but"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -1,5 +1,6 @@
 package fycsb.gky.tb_autosign.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -29,6 +31,7 @@ import fycsb.gky.tb_autosign.entity.UserMsg;
 import fycsb.gky.tb_autosign.http.TiebaRequest;
 import fycsb.gky.tb_autosign.http.VolleySingleton;
 import fycsb.gky.tb_autosign.utils.PostUrlUtil;
+import fycsb.gky.tb_autosign.utils.ProfileUtil;
 
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
@@ -37,6 +40,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Button                                      mLoginButton;
     private com.android.volley.toolbox.NetworkImageView mVcodeImage;
     private EditText                                    mVcodeEditText;
+    private ProgressBar                                 mProgress;
     private String                                      sign;
     private String                                      vcode;
     private String                                      vcodeMD5;
@@ -52,9 +56,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle(R.string.login_activity_name);
-        if (getIntent().hasExtra("NoGetUserInfo")){
+        if (getIntent().hasExtra("NoGetUserInfo")) {
 
-        }else {
+        } else {
             initConfig();
             init();
         }
@@ -68,7 +72,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
+    private boolean isLastLogin() {
+        SharedPreferences sharedPreferences = getSharedPreferences(
+                                getString(R.string.last_login_user) , MODE_PRIVATE);
+        name = sharedPreferences.getString(TieBaApi.NAME, null);
+        tbs = sharedPreferences.getString(TieBaApi.TBS, null);
+        return name == null && tbs == null ? false : true;
+    }
+
     private void init() {
+        mProgress = (ProgressBar) findViewById(R.id.progressbar);
         mUsername = (EditText) findViewById(R.id.username);
         mPassword = (EditText) findViewById(R.id.password);
         mVcodeImage = (com.android.volley.toolbox.NetworkImageView) findViewById(R.id.vcode_img);
@@ -84,6 +97,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_but:
+                mProgress.setVisibility(View.VISIBLE);
                 if (!PostUrlUtil.isConnected(MainActivity.this)) {
                     Toast.makeText(MainActivity.this, "请检查网络连接...>>>", Toast.LENGTH_SHORT).show();
                     break;
@@ -97,6 +111,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
+                                mProgress.setVisibility(View.GONE);
                                 try {
                                     JSONObject jsonObject = new JSONObject(response);
                                     errorCode = jsonObject.getString("error_code");
@@ -106,7 +121,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                 Gson gson = new Gson();
                                 UserMsg userMsg = gson.fromJson(response, UserMsg.class);
                                 if (errorCode.equals("0")) {
-                                    saveUser(userMsg);
+                                    ProfileUtil.saveUser(MainActivity.this, userMsg);
+                                    goTiebaAutoSign(name, tbs);
                                 } else if (errorCode.equals("5")) {
                                     mVcodeEditText.setVisibility(View.VISIBLE);
                                     mVcodeImage.setVisibility(View.VISIBLE);
@@ -167,23 +183,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 .putString(TieBaApi.DBUSS, userMsg.getUser().getBDUSS())
                 .putString(TieBaApi.PORTRAIT, userMsg.getUser().getPortrait())
                 .putString(TieBaApi.TBS, userMsg.getAnti().getTbs());
-
         editor.commit();
-        saveLastLoginUser(userMsg.getUser().getName(), userMsg.getAnti().getTbs());
-        goTiebaAutoSign(userMsg.getUser().getName(), userMsg.getAnti().getTbs());
+        String name = userMsg.getUser().getName();
+        String tbs = userMsg.getAnti().getTbs();
+        ProfileUtil.saveLastLoginUser(this, name, tbs);
+        ProfileUtil.saveLoginSuccessUser(this,name, tbs);
+        goTiebaAutoSign(name, tbs);
     }
 
-    private void saveLastLoginUser(String name, String tbs) {
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.last_login_user), MODE_PRIVATE);
-        sharedPreferences.edit().putString(TieBaApi.NAME, name).putString(TieBaApi.TBS, tbs).commit();
-    }
 
-    private boolean isLastLogin() {
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.last_login_user), MODE_PRIVATE);
-        name = sharedPreferences.getString(TieBaApi.NAME, null);
-        tbs = sharedPreferences.getString(TieBaApi.TBS, null);
-        return name == null && tbs == null ? false : true;
-    }
 
     private void goTiebaAutoSign(String name, String tbs) {
         Intent autoSignIntent = new Intent(MainActivity.this, AutoSignActivity.class);

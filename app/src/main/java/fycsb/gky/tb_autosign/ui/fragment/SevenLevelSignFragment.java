@@ -75,7 +75,6 @@ public class SevenLevelSignFragment extends Fragment
     public SevenLevelSignFragment() {
     }
 
-    public static final String DEBUG_TAG = ">>>>>>>>>>>>>>>>>>>>";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,6 +92,7 @@ public class SevenLevelSignFragment extends Fragment
             startActivity(it);
         }
         setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -100,8 +100,14 @@ public class SevenLevelSignFragment extends Fragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_seven_level_sign, container, false);
         init(view);
+        if (!isInit) {
+            mStartSignBut.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.GONE);
+        }
         return view;
     }
+
+    private boolean isInit = false;
 
 
     //viewpager加载的时候在可见时才加载网络部分
@@ -112,10 +118,13 @@ public class SevenLevelSignFragment extends Fragment
             if (!hasUserTiebaData()) {
                 Toast.makeText(getActivity(), "第一次使用该账号,正在获取贴吧id...", Toast.LENGTH_LONG).show();
                 initUserTiebaData();
-            } else {
+            } else{
+                if (mStartSignBut == null && mProgressBar == null) return;
                 mStartSignBut.setVisibility(View.VISIBLE);
                 mProgressBar.setVisibility(View.GONE);
+                isInit = true;
             }
+
         }
     }
 
@@ -188,10 +197,10 @@ public class SevenLevelSignFragment extends Fragment
         mSignMsg.setTextSize(20);
         mStartSignBut.setOnClickListener(this);
         mUsername.setText("用户名:" + username);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.listView);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(layoutManager);
+//        mRecyclerView = (RecyclerView) view.findViewById(R.id.listView);
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+//        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+//        mRecyclerView.setLayoutManager(layoutManager);
         date = new Date();
         time = date.getTime();
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.config) + username, getActivity().MODE_PRIVATE);
@@ -218,10 +227,10 @@ public class SevenLevelSignFragment extends Fragment
                     Toast.makeText(getActivity(), "获取成功...", Toast.LENGTH_SHORT).show();
 
 //暂时不知道做什么写的的代码，貌似是检查是否保存成功
-//                    if (loadUserTiebaData()) {
-//                        mStartSignBut.setVisibility(View.VISIBLE);
-//                        mProgressBar.setVisibility(View.GONE);
-//                    }
+                    if (loadUserTiebaData()) {
+                        mStartSignBut.setVisibility(View.VISIBLE);
+                        mProgressBar.setVisibility(View.GONE);
+                    }
                 } else if (errorCode.equals("1")) {         //账号信息不存在或者出现错误，导致的未登录行为，删除配置，重新登陆
                     getActivity().getSharedPreferences(getString(R.string.last_login_user), getActivity().MODE_PRIVATE).edit().clear().commit();
                     startActivity(new Intent(getActivity(),MainActivity.class));

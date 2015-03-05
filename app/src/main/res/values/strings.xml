@@ -14,13 +14,13 @@
     <string name="config">configuration_</string>
     <string name="last_login_user">last_login_user</string>
     <string name="tieba_id">tieba_id_config_</string>
-
+    <string name="already_login_user">already_login_user</string>
     <!-- Fragment -->
     <string name="title_fragment_some_sign">贴吧签到</string>
     <string name="title_fragment_all_sign">贴吧签到</string>
     <string name="start_sign_info_some">开始签到-部分</string>
     <string name="start_sign_info_all">开始签到-全部</string>
-
+    <string name="title_activity_settings">设置</string>
     <!-- menu 菜单 -->
     <string name="change_mode_info">切换模式</string>
      <string name="change_user_info">切换用户</string>

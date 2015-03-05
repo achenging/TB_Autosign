@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="switch_sign_mode">默认签到模式</string>
+    <string name="default_sign_mode_list">default_sign_mode_list</string>
+    <string name="general_info">通用设置</string>
+    <string name="general_mode_summary">打开软件后，自动选择设置的模式</string>
+
+    <string-array name="pref_mode_entry">
+        <item>全部（费流量，凌晨可以抢签到第一）</item>
+        <item>部分（只签七级以上，省流量）</item>
+    </string-array>
+    <string-array name="pref_mode_value">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+</resources>

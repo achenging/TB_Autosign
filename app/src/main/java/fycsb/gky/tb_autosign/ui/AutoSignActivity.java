@@ -1,10 +1,11 @@
 package fycsb.gky.tb_autosign.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,9 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import fycsb.gky.tb_autosign.R;
-import fycsb.gky.tb_autosign.adapter.CusPageChangedListener;
 import fycsb.gky.tb_autosign.adapter.CusPagerAdapter;
-import fycsb.gky.tb_autosign.adapter.CusTabListener;
 import fycsb.gky.tb_autosign.api.TieBaApi;
 import fycsb.gky.tb_autosign.ui.fragment.OneByOneSignFragment;
 import fycsb.gky.tb_autosign.ui.fragment.SevenLevelSignFragment;
@@ -54,8 +53,14 @@ public class AutoSignActivity extends BaseActivity {
                 Arrays.asList(new String[]{"全部","部分"}));
         mViewPager.setAdapter(pagerAdapter);
         mSlidingTabLayout.setViewPager(mViewPager,getResources().getDisplayMetrics().widthPixels);
-
         mSlidingTabLayout.setTabStripDividerColor(getResources().getColor(R.color.grey));
+
+
+        int index = PreferenceManager.getDefaultSharedPreferences(this).getInt("SIGN_MODE",0);
+        mViewPager.setCurrentItem(index);
+
+
+
     }
 
     @Override
@@ -68,13 +73,20 @@ public class AutoSignActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.chang_user:
-
+                Intent changUserLoginIntent = new Intent(AutoSignActivity.this,ChangeUserLoginActivity.class);
+                changUserLoginIntent.putExtra(TieBaApi.NAME, username);
+                changUserLoginIntent.putExtra(TieBaApi.TBS, tbs);
+                startActivity(changUserLoginIntent);
                 break;
-            case R.id.about:
-                Intent aboutIntent = new Intent(AutoSignActivity.this, AboutActivity.class);
-                aboutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(aboutIntent);
+            case R.id.settings:
+                Intent settingIntent = new Intent(AutoSignActivity.this,SettingsActivity.class);
+                startActivity(settingIntent);
                 break;
+//            case R.id.about:
+//                Intent aboutIntent = new Intent(AutoSignActivity.this, AboutActivity.class);
+//                aboutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(aboutIntent);
+//                break;
             case R.id.exit:
                 finish();
                 break;

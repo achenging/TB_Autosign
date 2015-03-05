@@ -19,9 +19,5 @@
         <item name="android:dividerPadding">24dip</item>
     </style>
 
-    <color name="red">#FF0000</color>
-    <color name="black">#ff000000</color>
-    <color name="grey">#28000000</color>
-    <color name="black_and_grey">#ab000000</color>
-    <color name="little_grey">#ff9ca0a2</color>
+
 </resources>

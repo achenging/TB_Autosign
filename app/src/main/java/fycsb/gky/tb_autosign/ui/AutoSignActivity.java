@@ -82,11 +82,6 @@ public class AutoSignActivity extends BaseActivity {
                 Intent settingIntent = new Intent(AutoSignActivity.this,SettingsActivity.class);
                 startActivity(settingIntent);
                 break;
-//            case R.id.about:
-//                Intent aboutIntent = new Intent(AutoSignActivity.this, AboutActivity.class);
-//                aboutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(aboutIntent);
-//                break;
             case R.id.exit:
                 finish();
                 break;

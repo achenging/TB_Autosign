@@ -25,7 +25,7 @@ import fycsb.gky.tb_autosign.utils.ProfileUtil;
 /**
  * Created by codefu on 2015/3/4.
  */
-public class ChangeUserLoginActivity extends ActionBarActivity {
+public class ChangeUserLoginActivity extends BaseActivity {
     private ListView              mListView;
     private Toolbar               mToolbar;
     private List<String>          users;
@@ -115,4 +115,6 @@ public class ChangeUserLoginActivity extends ActionBarActivity {
             mContext.startActivity(intent);
         }
     }
+
+
 }

@@ -7,7 +7,7 @@ import android.net.ConnectivityManager;
 import android.os.IBinder;
 import android.util.Log;
 
-import fycsb.gky.tb_autosign.utils.ConnectionChangeReceiver;
+import fycsb.gky.tb_autosign.broadcast.ConnectionChangeReceiver;
 
 /**
  * Created by codefu on 2015/2/28.

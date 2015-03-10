@@ -1,11 +1,12 @@
 package fycsb.gky.tb_autosign.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -34,13 +35,14 @@ import fycsb.gky.tb_autosign.utils.PostUrlUtil;
 import fycsb.gky.tb_autosign.utils.ProfileUtil;
 
 
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener{
     private EditText                                    mUsername;
     private EditText                                    mPassword;
     private Button                                      mLoginButton;
     private com.android.volley.toolbox.NetworkImageView mVcodeImage;
     private EditText                                    mVcodeEditText;
     private ProgressBar                                 mProgress;
+    private Toolbar                                     mToolbar;
     private String                                      sign;
     private String                                      vcode;
     private String                                      vcodeMD5;
@@ -62,7 +64,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             initConfig();
             init();
         }
-
     }
 
     private void initConfig() {
@@ -81,6 +82,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void init() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mProgress = (ProgressBar) findViewById(R.id.progressbar);
         mUsername = (EditText) findViewById(R.id.username);
         mPassword = (EditText) findViewById(R.id.password);
@@ -91,6 +93,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mVcodeEditText.addTextChangedListener(new TextWatcherListener());
         date = new Date();
         timeStamp = date.getTime();
+        setSupportActionBar(mToolbar);
     }
 
     @Override
@@ -100,6 +103,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 mProgress.setVisibility(View.VISIBLE);
                 if (!PostUrlUtil.isConnected(MainActivity.this)) {
                     Toast.makeText(MainActivity.this, "请检查网络连接...>>>", Toast.LENGTH_SHORT).show();
+                    mProgress.setVisibility(View.GONE);
                     break;
                 }
                 final String username = mUsername.getText().toString();
@@ -122,7 +126,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                 UserMsg userMsg = gson.fromJson(response, UserMsg.class);
                                 if (errorCode.equals("0")) {
                                     ProfileUtil.saveUser(MainActivity.this, userMsg);
-                                    goTiebaAutoSign(name, tbs);
+                                    goTiebaAutoSign(userMsg.getUser().getName(), userMsg.getAnti().getTbs());
                                 } else if (errorCode.equals("5")) {
                                     mVcodeEditText.setVisibility(View.VISIBLE);
                                     mVcodeImage.setVisibility(View.VISIBLE);
@@ -194,6 +198,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
     private void goTiebaAutoSign(String name, String tbs) {
+        Log.d("Main>>>>>>>>>>>",name);
         Intent autoSignIntent = new Intent(MainActivity.this, AutoSignActivity.class);
         autoSignIntent.putExtra(TieBaApi.NAME, name);
         autoSignIntent.putExtra(TieBaApi.TBS, tbs);

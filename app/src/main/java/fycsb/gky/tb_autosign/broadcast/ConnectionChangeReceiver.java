@@ -1,4 +1,4 @@
-package fycsb.gky.tb_autosign.utils;
+package fycsb.gky.tb_autosign.broadcast;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -49,7 +49,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i("RECEVIER", ">>>>");
+        Log.d("RECEVIER", ">>>>");
         CheckNetwork(context);
     }
 
@@ -129,31 +129,5 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
         }
         return stateCode;
     }
-
-
-//        NetworkInfo wifiInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-//        NetworkInfo mobileNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-//
-//
-//        if (wifiInfo != null && wifiInfo.isConnected()) {
-//            isConnect = true;
-//        }
-//        if (mobileNetInfo != null && mobileNetInfo.isConnected()) {
-//            isConnect = true;
-//        }
-//        boolean wifiDisconnected = false;
-//        boolean gprsDisconnected = false;
-//        if (wifiInfo == null || wifiInfo != null
-//                && wifiInfo.getState() == NetworkInfo.State.DISCONNECTED) {
-//            wifiDisconnected = true;
-//        }
-//        if (mobileNetInfo == null || mobileNetInfo != null
-//                && mobileNetInfo.getState() == NetworkInfo.State.DISCONNECTED) {
-//            gprsDisconnected = true;
-//        }
-//        if (wifiDisconnected && gprsDisconnected) {
-//            Toast.makeText(context.getApplicationContext(),"网络不可用...",Toast.LENGTH_LONG).show();
-//            isConnect = false;
-//        }
 }
 

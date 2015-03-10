@@ -1,22 +1,12 @@
 package fycsb.gky.tb_autosign.encrypt;
 
-/**
- * Created by codefu on 2014/8/27.
- */
-
-import com.google.gson.Gson;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 import fycsb.gky.tb_autosign.api.TieBaApi;
-import fycsb.gky.tb_autosign.entity.TBList;
-import fycsb.gky.tb_autosign.utils.PostUrlUtil;
 
 public class MD5Encrypt {
 

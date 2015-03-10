@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import fycsb.gky.tb_autosign.service.NetworkService;
-import fycsb.gky.tb_autosign.utils.ConnectionChangeReceiver;
+import fycsb.gky.tb_autosign.broadcast.ConnectionChangeReceiver;
 
 /**
  * Created by codefu on 2015/2/28.

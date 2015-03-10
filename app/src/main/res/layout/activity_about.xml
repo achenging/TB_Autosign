@@ -17,15 +17,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <TextView
+                android:id="@+id/contact_me"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/contact_str"
+                android:textSize="25sp"/>
+            <TextView
                 android:id="@+id/about_tips"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/about_programmer"
+                android:text="@string/about_programmer_str"
                 android:textSize="20sp"/>
-            <ImageView
-                android:src="@drawable/getqrcode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

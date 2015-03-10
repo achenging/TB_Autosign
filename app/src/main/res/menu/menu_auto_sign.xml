@@ -18,5 +18,8 @@
           android:title="@string/exit_info"
           android:orderInCategory="100"
           app:showAsAction="always"/>
+    <item android:id="@+id/about"
+        android:title="@string/about_info"
+        app:showAsAction="never"/>
 
 </menu>

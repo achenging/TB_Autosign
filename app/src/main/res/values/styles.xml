@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/grey</item>
         <item name="colorPrimaryDark">@color/grey</item>
         <item name="android:windowBackground">@color/little_grey</item>
+        <item name="actionOverflowMenuStyle">@style/PopupMenu.MyStyle</item>
     </style>
 
     <style name="AppTheme.Base" parent="Theme.AppCompat">
@@ -18,6 +19,8 @@
         <item name="android:paddingLeft">80px</item>
         <item name="android:dividerPadding">24dip</item>
     </style>
-
+    <style name="PopupMenu.MyStyle" parent="android:Widget.PopupMenu">
+        <item name="android:popupBackground">@drawable/menu_background</item>
+    </style>
 
 </resources>

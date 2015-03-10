@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,7 +86,13 @@ public class AutoSignActivity extends BaseActivity {
             case R.id.exit:
                 finish();
                 break;
+            case R.id.about:
+                Intent aboutIntent = new Intent(AutoSignActivity.this,AboutActivity.class);
+                startActivity(aboutIntent);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

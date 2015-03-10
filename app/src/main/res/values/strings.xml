@@ -29,10 +29,25 @@
     <string name="title_activity_about">关于</string>
 
     <!--AboutActivity-->
-    <string name="about_programmer">
-        使用教程:\n\t本程序提供了一键签50个七级以上的贴吧（和官方的差不多,此种比较方式比较省流量,只需要3KB）\n
-        也支持签到低于七级的贴吧，但是请切换模式。（这种大概签到一个需要2KB，此模式建议在wifi下签到）\n\n
-        关于：\n\t本程序由于缺少贴吧帐号用于测试，可能会出现各种bug，欢迎反馈，也可以提供一下界面的设计。另外本程序不出现盗号行为，一旦出现帐号被盗行本人一概不负责。\n\n
-        联系方式:\n\t微信公众号：奇淫怪技\n\t微信号：qiyinguaiji
+    <string name="about_programmer_str">
+License\n
+============\n
+\n
+    Copyright 2015 codefu
+\n\n
+	Licensed under the Apache License, Version 2.0 (the "License");\n
+	you may not use this file except in compliance with the License.\n
+	You may obtain a copy of the License at\n\n
+
+     http://www.apache.org/licenses/LICENSE-2.0\n\n
+
+	Unless required by applicable law or agreed to in writing, software\n
+	distributed under the License is distributed on an "AS IS" BASIS,\n
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n
+	See the License for the specific language governing permissions and\n
+	limitations under the License.\n\n\n
+    </string>
+    <string name="contact_str">
+        Contact: mycodefu@gmail.com\n\n
     </string>
 </resources>

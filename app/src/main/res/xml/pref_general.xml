@@ -3,7 +3,7 @@
     <PreferenceCategory
         android:title="@string/general_info">
         <ListPreference
-            android:key="@string/default_sign_mode_list"
+            android:key="@string/default_sign_mode_list_key"
             android:title="@string/switch_sign_mode"
             android:defaultValue="0"
             android:entries="@array/pref_mode_entry"
@@ -11,5 +11,18 @@
             android:negativeButtonText="@null"
             android:positiveButtonText="@null" />
     </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/timer_info">
 
+        <SwitchPreference
+            android:title="@string/switch_time_open_or_close_info"
+            android:key="@string/switch_time_open_or_close_key">
+
+        </SwitchPreference>
+        <fycsb.gky.tb_autosign.ui.view.TimePreference
+            android:key="@string/time_to_do_key"
+            android:title="@string/time_setting">
+
+        </fycsb.gky.tb_autosign.ui.view.TimePreference>
+    </PreferenceCategory>
 </PreferenceScreen>

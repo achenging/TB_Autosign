@@ -17,7 +17,7 @@ import fycsb.gky.tb_autosign.encrypt.MD5Encrypt;
 import fycsb.gky.tb_autosign.entity.ForumInfo;
 
 /**
- * Created by codefu on 2014/12/27.
+ * Created by codefu.
  */
 public class PostUrlUtil {
 

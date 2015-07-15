@@ -1,24 +1,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context="fycsb.gky.tb_autosign.ui.AutoSignActivity">
+      tools:context="fycsb.gky.tb_autosign.ui.TiebaSignActivity">
 
 
-    <item android:id="@+id/chang_user"
-          android:icon="@drawable/ic_account_switch"
+    <item
+        android:id="@+id/chang_user"
+        android:icon="@drawable/ic_account_switch"
         android:title="@string/change_user_info"
         app:showAsAction="always"/>
-    <item android:id="@+id/settings"
-          android:icon="@drawable/ic_settings"
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_settings"
         android:title="设置"
         app:showAsAction="always"/>
 
-    <item android:id="@+id/exit"
-          android:icon="@drawable/ic_exit_to_app"
-          android:title="@string/exit_info"
-          android:orderInCategory="100"
-          app:showAsAction="always"/>
-    <item android:id="@+id/about"
+    <item
+        android:id="@+id/exit"
+        android:icon="@drawable/ic_exit_to_app"
+        android:orderInCategory="100"
+        android:title="@string/exit_info"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/about"
         android:title="@string/about_info"
         app:showAsAction="never"/>
 

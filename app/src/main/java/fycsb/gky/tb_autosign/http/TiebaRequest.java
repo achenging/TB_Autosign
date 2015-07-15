@@ -1,22 +1,23 @@
 package fycsb.gky.tb_autosign.http;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 /**
- * Created by codefu on 2014/12/27.
+ * Created by codefu.
  */
 public class TiebaRequest extends Request<String> {
     private final Response.Listener<String> mListener;
@@ -51,7 +52,12 @@ public class TiebaRequest extends Request<String> {
         return super.getParams();
     }
 
-
+    @Override
+    public RetryPolicy getRetryPolicy() {
+        RetryPolicy retryPolicy = new DefaultRetryPolicy(TIMEOUT, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        return retryPolicy;
+    }
+    private static final int TIMEOUT = 5;
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
         Map<String, String> headerMap = new HashMap<String, String>();
@@ -70,15 +76,7 @@ public class TiebaRequest extends Request<String> {
 
     @Override
     protected Response<String> parseNetworkResponse(NetworkResponse response) {
-        String parsed;
-//        Map<String, String> responseHeaders = response.headers;
-//        String rawCookies = responseHeaders.get("Set-Cookie");
-//        try {
-//            String dataString = new String(response.data, "UTF-8");
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
-        parsed = getRealString(response.data);
+        String parsed = getRealString(response.data);
         return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response));
 
     }
@@ -89,8 +87,8 @@ public class TiebaRequest extends Request<String> {
 
     private String getRealString(byte[] data) {
         byte[] h = new byte[2];
-        h[0] = (data)[0];
-        h[1] = (data)[1];
+        h[0] = data[0];
+        h[1] = data[1];
         int head = getShort(h);
         boolean t = head == 0x1f8b;
         InputStream in;

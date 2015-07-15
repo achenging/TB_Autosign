@@ -8,7 +8,7 @@ import android.util.Log;
 import java.util.List;
 
 /**
- * Created by codefu on 2015/2/27.
+ * Created by codefu.
  */
 public class CusPagerAdapter extends FragmentPagerAdapter {
     private List<Fragment> fragments;

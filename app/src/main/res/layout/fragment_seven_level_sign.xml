@@ -7,7 +7,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 android:tag="SEVEN_LEVEL"
-                tools:context="fycsb.gky.tb_autosign.ui.AutoSignActivity">
+                tools:context="fycsb.gky.tb_autosign.ui.TiebaSignActivity">
     <com.romainpiel.shimmer.ShimmerTextView
         android:id="@+id/username"
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
         android:textSize="25sp"/>
 
     <Button
-        android:id="@+id/start_sign_but"
+        android:id="@+id/btn_start_sign_but"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/username"
@@ -33,36 +33,25 @@
         android:indeterminate="false"/>
 
     <TextView
-        android:id="@+id/tips"
+        android:id="@+id/tv_tips"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/start_sign_but"
+        android:layout_below="@+id/btn_start_sign_but"
         android:text="暂时只能签50个七级以上的贴吧,若要签低于七级的请切换签到模式\n"
         android:textColor="@color/red"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipelayout"
-        android:layout_below="@+id/tips"
+        android:layout_below="@+id/tv_tips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <ScrollView
-            android:id="@+id/scroll"
+        <ListView
+            android:id="@+id/lv_seven_sign_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/sign_msg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </ScrollView>
-        <!--<android.support.v7.widget.RecyclerView-->
-            <!--android:id="@+id/listView"-->
-            <!--android:layout_below="@+id/start_sign_but"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:divider="@color/black"/>-->
+        </ListView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 

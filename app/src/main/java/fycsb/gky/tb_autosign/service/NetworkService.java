@@ -21,18 +21,15 @@ public class NetworkService extends Service{
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         receiver = new ConnectionChangeReceiver();
         registerReceiver(receiver, filter);
-        log(this.getClass(), ">>>>>register");
+        Log.e("RECEIVER>>","register");
         super.onCreate();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        log(this.getClass(),"Start Again...");
         return super.onStartCommand(intent, flags, startId);
     }
-    private void log(Class<?> c, String log) {
-        Log.d(c.getName(), log);
-    }
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;

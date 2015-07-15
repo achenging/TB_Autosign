@@ -14,18 +14,18 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt')
-            proguardFile '/Users/codefu/dev/adt-bundle-mac-x86_64-20140702/sdk/tools/proguard/proguard-android.txt'
+
+            proguardFile 'D:\\develop\\android\\android-sdk\\tools\\proguard\\proguard-android.txt'
         }
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':volley')
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:support-v4:21.0.3'
-    compile 'com.android.support:recyclerview-v7:21.0.3'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.romainpiel.shimmer:library:1.2.0@aar'
+    //compile 'com.android.support:design:0.0.+'
 }

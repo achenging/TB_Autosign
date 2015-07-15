@@ -7,7 +7,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 android:tag="ONE_BY_ONE"
-                tools:context="fycsb.gky.tb_autosign.ui.AutoSignActivity">
+                tools:context="fycsb.gky.tb_autosign.ui.TiebaSignActivity">
     <com.romainpiel.shimmer.ShimmerTextView
         android:id="@+id/username"
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
         android:textSize="25sp"/>
 
     <Button
-        android:id="@+id/start_sign_but"
+        android:id="@+id/btn_start_sign_but"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/username"
@@ -33,9 +33,9 @@
         android:indeterminate="false"
         android:visibility="gone"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview"
-        android:layout_below="@+id/start_sign_but"
+    <ListView
+        android:id="@+id/listview"
+        android:layout_below="@+id/btn_start_sign_but"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@color/black"/>

@@ -19,21 +19,27 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"/>
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
         android:hint="@string/username_info"
-        android:singleLine="true"/>
+        android:textSize="25sp"
+        android:singleLine="true"
+        android:imeOptions="actionNext"/>
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/username"
+        android:gravity="center_horizontal"
         android:hint="@string/password_info"
         android:password="true"
+        android:textSize="25sp"
+        android:completionThreshold="1"
         android:singleLine="true"/>
 
     <EditText
@@ -43,6 +49,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/password"
+        android:singleLine="true"
         android:hint="@string/please_input_vcode"
         android:visibility="gone"/>
 

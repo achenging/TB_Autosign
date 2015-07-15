@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="switch_sign_mode">默认签到模式</string>
-    <string name="default_sign_mode_list">default_sign_mode_list</string>
-    <string name="general_info">通用设置</string>
+    <string name="default_sign_mode_list_key">default_sign_mode_list</string>
+    <string name="general_info">模式设置</string>
+    <string name="timer_info">定时设置</string>
     <string name="general_mode_summary">打开软件后，自动选择设置的模式</string>
 
     <string-array name="pref_mode_entry">
@@ -14,4 +14,12 @@
         <item>0</item>
         <item>1</item>
     </string-array>
+
+    <string name="time_to_do_key">timer_to_do</string>
+    <string name="switch_time_open_or_close_key">switch_time_key</string>
+    
+    <string name="switch_time_open_or_close_info">定时签到开关</string>
+    <string name="time_setting">时间设置</string>
+    <string name="set">确定</string>
+    <string name="cancel">取消</string>
 </resources>

@@ -10,19 +10,19 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
 /**
- * Created by codefu on 2014/12/27.
+ * Created by codefu.
  */
 public class VolleySingleton {
-    private static Context         mContext;
+    private        Context         mContext;
     private static VolleySingleton mSingleton;
     private        RequestQueue    mRequestQueue;
     private        ImageLoader     mImageLoader;
 
     private VolleySingleton(Context context) {
         mContext = context;
-        mRequestQueue = getmRequestQueue();
+        mRequestQueue = getRequestQueue();
         mImageLoader = new ImageLoader(mRequestQueue,new ImageLoader.ImageCache() {
-            LruCache<String, Bitmap> lruCache = new LruCache<>(50);
+            LruCache<String, Bitmap> lruCache = new LruCache<>(10);
 
             @Override
             public Bitmap getBitmap(String url) {
@@ -43,7 +43,7 @@ public class VolleySingleton {
         return mSingleton;
     }
 
-    public RequestQueue getmRequestQueue() {
+    public RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
             mRequestQueue = Volley.newRequestQueue(mContext.getApplicationContext());
         }

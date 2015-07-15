@@ -94,6 +94,6 @@ public class ForumState implements Serializable {
 
     @Override
     public String toString() {
-        return forumName + "\t--->\t 签到成功\n";
+        return forumName + "吧";
     }
 }

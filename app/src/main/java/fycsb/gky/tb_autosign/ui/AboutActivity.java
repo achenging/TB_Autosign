@@ -2,6 +2,7 @@ package fycsb.gky.tb_autosign.ui;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import fycsb.gky.tb_autosign.R;
 
@@ -11,6 +12,7 @@ public class AboutActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
+
     }
 
 

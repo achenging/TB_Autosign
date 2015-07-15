@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sign_detail_key">msg</string>
+    <string name="sign_issuccess_key">is_success</string>
+    <string name="sign_detail_value">%s吧</string>
+    <string name="sign_issuccess_value">is_success</string>
+    <string name="fid_key">fid</string>
+    <string name="yes">true</string>
+    <string name="no">false</string>
+</resources>

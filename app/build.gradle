@@ -13,9 +13,9 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
 
-            proguardFile 'D:\\develop\\android\\android-sdk\\tools\\proguard\\proguard-android.txt'
+            proguardFile 'proguard-android.txt'
         }
     }
 }
